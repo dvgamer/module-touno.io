@@ -4,12 +4,12 @@ module.exports = [
     id: 'Coin',
     name: 'db-nicehash-coin',
     schema: mongoose.Schema({
-        time: Number,
-        crypto: String,
-        satoshi: Number,
-        balance: Number,
-        second: Number,
-        created: Date
+      time: Number,
+      crypto: String,
+      satoshi: Number,
+      balance: Number,
+      second: Number,
+      created: Date
     })
   },
   {
