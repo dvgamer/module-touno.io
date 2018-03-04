@@ -4,8 +4,9 @@ const nicehash = require('./nicehash')
 let db = []
 let mongodb = {
   dbOpen: (options) => {
+    // { user: 'admin', pass: 'admin', dbname: 'test' }
     const MONGODB = process.env.MONGODB || '127.0.0.1:27017'
-    const conn = `mongodb://${MONGODB}/${options.dbname}${options.username ? '?authMode=scram-sha1?authSource=admin' : ''}`
+    const conn = `mongodb://${MONGODB}/${options.dbname}${options.user ? '?authMode=scram-sha1?authSource=admin' : ''}`
     delete options.dbname
     return mongoose.connect(conn, options)
   },
