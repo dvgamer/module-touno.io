@@ -5,7 +5,9 @@ let db = []
 let mongodb = {
   dbOpen: (options) => {
     const MONGODB = process.env.MONGODB || '127.0.0.1:27017'
-    return mongoose.connect(`mongodb://${MONGODB}/${options.dbname}${options.auth ? '?authMode=scram-sha1?authSource=admin' : ''}`, options)
+    const conn = `mongodb://${MONGODB}/${options.dbname}${options.username ? '?authMode=scram-sha1?authSource=admin' : ''}`
+    delete options.dbname
+    return mongoose.connect(conn, options)
   },
   tests: mongoose.model('db-tests', mongoose.Schema({ any: mongoose.Schema.Types.Mixed }), 'db-tests'),
   dbClose: () => {
