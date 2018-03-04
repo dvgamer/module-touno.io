@@ -4,6 +4,7 @@
   "description": "Global data and oauth in all projects.",
   "main": "index.js",
   "scripts": {
+    "dev": "babel-node test/index.js",
     "test": "echo test"
   },
   "repository": {
@@ -19,5 +20,13 @@
   "bugs": {
     "url": "https://github.com/dvgamer/module-touno.io/issues"
   },
-  "homepage": "https://github.com/dvgamer/module-touno.io#readme"
+  "homepage": "https://github.com/dvgamer/module-touno.io#readme",
+  "dependencies": {
+    "numeral": "^2.0.6",
+    "raven": "^2.4.2"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
+  }
 }
