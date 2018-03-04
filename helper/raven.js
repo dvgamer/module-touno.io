@@ -1,4 +1,5 @@
 const Raven = require('raven')
+const { debug } = require('./variables')
 
 if (process.env.RAVEN_CONFIG) {
   Raven.config(process.env.RAVEN_CONFIG).install((err, initialErr, eventId) => {
@@ -8,7 +9,7 @@ if (process.env.RAVEN_CONFIG) {
 }
 
 module.exports = ex => {
-  if (process.env.NODE_ENV === 'production' && process.env.RAVEN_CONFIG) {
+  if (!debug && process.env.RAVEN_CONFIG) {
     Raven.captureException(ex)
   } else {
     console.log(`${ex.message}`)
