@@ -1,7 +1,6 @@
-'use strict'
 const numeral = require('numeral')
 
-export default {
+module.exports = {
   constructor () {
     this._core = process.hrtime()
   },

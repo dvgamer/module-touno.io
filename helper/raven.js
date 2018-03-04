@@ -7,7 +7,7 @@ if (process.env.RAVEN_CONFIG) {
   })
 }
 
-export default (ex) => {
+module.exports = ex => {
   if (process.env.NODE_ENV === 'production' && process.env.RAVEN_CONFIG) {
     Raven.captureException(ex)
   } else {
