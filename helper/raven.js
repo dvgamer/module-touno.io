@@ -12,6 +12,6 @@ module.exports = ex => {
   if (!debug && process.env.RAVEN_CONFIG) {
     Raven.captureException(ex)
   } else {
-    console.log(`${ex.message}`)
+    console.log(`${ex.message || ex}`)
   }
 }
