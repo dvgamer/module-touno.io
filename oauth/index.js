@@ -1,6 +1,5 @@
-import { oAuth } from '../mongodb'
+const { oAuth } = require('../mongodb')
 // import { slack } from '../.notify'
-import { Time } from '../.helper'
 
 const moment = require('moment')
 const request = require('request-promise')

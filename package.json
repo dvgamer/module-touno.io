@@ -23,10 +23,13 @@
   },
   "homepage": "https://github.com/dvgamer/module-touno.io#readme",
   "dependencies": {
+    "moment": "^2.21.0",
     "mongoose": "^5.0.8",
     "numeral": "^2.0.6",
     "q": "^1.5.1",
-    "raven": "^2.4.2"
+    "raven": "^2.4.2",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.1",
