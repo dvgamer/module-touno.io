@@ -18,10 +18,14 @@ const webhook = (uri, name, message, channel) => {
   let payload = {
     text: message,
     username: name,
-    channel: channel,
-    icon_url: undefined
+    channel: channel
   }
-  delete payload.icon_url
+  if (typeof message === 'object') {
+    payload = message
+    payload.channel = channel
+    payload.username = name
+  }
+
   if (!channel) delete payload.channel
   if (!name) delete payload.name
   return request({
