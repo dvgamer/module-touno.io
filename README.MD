@@ -19,4 +19,4 @@ LINE_ID
 ```
 
 ### License
-Apache © 2018 Touno™
+MIT © 2018 Touno™

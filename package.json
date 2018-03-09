@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "node test/index.js",
+    "dev:win": "cls && npm run lint && npm run dev",
     "lint": "eslint --ext .js --ignore-path .gitignore .",
-    "test": "echo test"
+    "test": "node test"
   },
   "repository": {
     "type": "git",

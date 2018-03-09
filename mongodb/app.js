@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 module.exports = [
   {
-    id: 'oAuth',
+    id: 'OAuth',
     name: 'oauth-3rd',
     schema: mongoose.Schema({
       name: String,
