@@ -19,5 +19,18 @@ module.exports = [
       type: String,
       data: mongoose.Schema.Types.Mixed
     })
+  },
+  {
+    id: 'Miner',
+    name: 'db-nicehash-miner',
+    schema: mongoose.Schema({
+      gpu_id: String,
+      index: Number,
+      name: String,
+      compute: String,
+      state: String,
+      bus_id: String,
+      updated: Date
+    })
   }
 ]
