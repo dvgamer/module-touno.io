@@ -10,8 +10,9 @@ let db = []
 let mongodb = {
   MongooseOpen: async options => {
     // { user: 'admin', pass: 'admin', dbname: 'test' }
+    options = options || {}
     const MONGODB = process.env.MONGODB || '127.0.0.1:27017'
-    const login = { user: options.user, pass: options.pass }
+    const login = { user: options.user || process.env.MONGODB_USER, pass: options.pass || process.env.MONGODB_PASS }
     const dbo = `mongodb://${MONGODB}/${options.dbname}${options.user ? '?authMode=scram-sha1?authSource=admin' : ''}`
     if (debug) console.log(`[MongoDB] ${mongoose.connection.readyState}:Connecting... 'mongodb://${MONGODB}/${options.dbname}'`)
     await mongoose.connect(dbo, login)
