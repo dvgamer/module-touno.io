@@ -1,4 +1,4 @@
-# Touno.io Core
+# Touno.io ![Travis](https://img.shields.io/travis/dvgamer/module-touno.io.svg?style=flat-square)
 
 ### Requirement Environment
 ```yml
