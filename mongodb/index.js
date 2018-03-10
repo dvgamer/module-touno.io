@@ -1,9 +1,6 @@
 const mongoose = require('mongoose')
 mongoose.Promise = require('q').Promise
 
-const nicehash = require('./nicehash')
-const wakatime = require('./wakatime')
-const dbapp = require('./app')
 const { debug } = require('../helper/variables')
 
 let db = []
@@ -24,9 +21,10 @@ let mongodb = {
   }
 }
 
-db = db.concat(dbapp)
-db = db.concat(nicehash)
-db = db.concat(wakatime)
+db = db.concat(require('./app'))
+db = db.concat(require('./nicehash'))
+db = db.concat(require('./wakatime'))
+db = db.concat(require('./github'))
 
 for (var i = 0; i < db.length; i++) {
   mongodb[db[i].id] = mongoose.model(db[i].name, db[i].schema, db[i].name)
