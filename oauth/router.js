@@ -13,20 +13,6 @@ const router = express.Router()
 let host = !debug ? `https://${process.env.VIRTUAL_HOST}` : `http://localhost:8080`
 
 module.exports = grant => {
-  router.use('/', async (req, res, next) => {
-    let closeMongo = () => {
-      console.log(`[${grant.auth}] Database Disconnected.`)
-    }
-    // hooks to execute after response
-    res.on('finish', () => MongooseClose().then(closeMongo).catch(Raven))
-    res.on('close', () => MongooseClose().then(closeMongo).catch(Raven))
-
-    MongooseOpen({ user: 'admin', pass: 'ar00t-touno', dbname: 'db_touno' }).then(() => {
-      console.log(`[${grant.auth}] Database Connected.`)
-      next()
-    }).catch(Raven)
-  })
-
   router.get(`/${grant.name}`, async (req, res) => {
     let { query, baseUrl } = req
 
@@ -55,23 +41,34 @@ module.exports = grant => {
       let token = await request({ method: 'POST', uri: client[grant.auth].token, form: data, json: true })
 
       console.log(`[${grant.auth}] OAuth2 Step-2 -- Token verify`)
-      let item = await OAuth.findOne({ name: grant.auth })
+      MongooseOpen({ user: 'admin', pass: 'ar00t-touno', dbname: 'db_touno' }).then(() => {
+        console.log(`[${grant.auth}] OAuth2 Step-3 -- Database Connected.`)
+        let item = await OAuth.findOne({ name: grant.auth })
 
-      let commited = {
-        name: grant.auth,
-        client_id: `${data.client_id}|${data.client_secret}`,
-        refresh_token: token.refresh_token,
-        expire: moment(),
-        state: client[grant.auth].state || null,
-        scope: token
-      }
+        let commited = {
+          name: grant.auth,
+          client_id: `${data.client_id}|${data.client_secret}`,
+          refresh_token: token.refresh_token,
+          expire: moment(),
+          state: client[grant.auth].state || null,
+          scope: token
+        }
 
-      if (!item) {
-        await new OAuth(commited).save()
-      } else {
-        await OAuth.update({ _id: item._id }, { $set: commited })
+        if (!item) {
+          await new OAuth(commited).save()
+        } else {
+          await OAuth.update({ _id: item._id }, { $set: commited })
+        }
+        console.log(`[${grant.auth}] OAuth2 Step-4 -- Token ${!item ? 'created' : 'updated'} (${elapsed.nanoseconds()}).`)
+      }).catch(Raven)
+
+      let closeMongo = () => {
+        console.log(`[${grant.auth}] OAuth2 Step-5 -- Database Disconnected.`)
       }
-      console.log(`[${grant.auth}] OAuth2 Step-3 -- Token ${!item ? 'created' : 'updated'} (${elapsed.nanoseconds()}).`)
+      // hooks to execute after response
+      res.on('finish', () => MongooseClose().then(closeMongo).catch(Raven))
+      res.on('close', () => MongooseClose().then(closeMongo).catch(Raven))
+      
       res.redirect(`${host}/`)
     }
   })
