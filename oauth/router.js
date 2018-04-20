@@ -1,6 +1,7 @@
-const { OAuth } = require('../mongodb')
+const { OAuth, MongooseOpen, MongooseClose } = require('../mongodb')
 const { debug } = require('../helper/variables')
 const Time = require('../helper/time')
+const Raven = require('../helper/raven')
 const client = require('./clients')
 
 const express = require('express')
@@ -12,6 +13,20 @@ const router = express.Router()
 let host = !debug ? `https://${process.env.VIRTUAL_HOST}` : `http://localhost:8080`
 
 module.exports = grant => {
+  router.use('/', async (req, res, next) => {
+    let closeMongo = () => {
+      console.log(`[${grant.auth}] Database Disconnected.`)
+    }
+    // hooks to execute after response
+    res.on('finish', () => MongooseClose().then(closeMongo).catch(Raven))
+    res.on('close', () => MongooseClose().then(closeMongo).catch(Raven))
+
+    MongooseOpen({ user: 'admin', pass: 'ar00t-touno', dbname: 'db_touno' }).then(() => {
+      console.log(`[${grant.auth}] Database Connected.`)
+      next()
+    }).catch(Raven)
+  })
+
   router.get(`/${grant.name}`, async (req, res) => {
     let { query, baseUrl } = req
 

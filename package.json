@@ -23,6 +23,9 @@
     "url": "https://github.com/dvgamer/module-touno.io/issues"
   },
   "homepage": "https://github.com/dvgamer/module-touno.io#readme",
+ "optionalDependencies": {
+    "fsevents": "*"
+  },
   "dependencies": {
     "@line/bot-sdk": "^6.0.0",
     "lodash": "^4.17.5",
