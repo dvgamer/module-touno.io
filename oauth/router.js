@@ -1,6 +1,6 @@
 const { OAuth } = require('../mongodb')
-const { debug } = require('./helper/variables')
-const Time = require('./helper/time')
+const { debug } = require('../helper/variables')
+const Time = require('../helper/time')
 const client = require('./clients')
 
 const express = require('express')
