@@ -41,7 +41,7 @@ module.exports = grant => {
       let token = await request({ method: 'POST', uri: client[grant.auth].token, form: data, json: true })
 
       console.log(`[${grant.auth}] OAuth2 Step-2 -- Token verify`)
-      MongooseOpen({ user: 'admin', pass: 'ar00t-touno', dbname: 'db_touno' }).then(() => {
+      MongooseOpen({ user: 'admin', pass: 'ar00t-touno', dbname: 'db_touno' }).then(async () => {
         console.log(`[${grant.auth}] OAuth2 Step-3 -- Database Connected.`)
         let item = await OAuth.findOne({ name: grant.auth })
 
@@ -68,7 +68,7 @@ module.exports = grant => {
       // hooks to execute after response
       res.on('finish', () => MongooseClose().then(closeMongo).catch(Raven))
       res.on('close', () => MongooseClose().then(closeMongo).catch(Raven))
-      
+
       res.redirect(`${host}/`)
     }
   })
