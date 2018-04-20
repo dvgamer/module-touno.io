@@ -41,26 +41,26 @@ module.exports = grant => {
       let token = await request({ method: 'POST', uri: client[grant.auth].token, form: data, json: true })
 
       console.log(`[${grant.auth}] OAuth2 Step-2 -- Token verify`)
-      MongooseOpen({ user: 'admin', pass: 'ar00t-touno', dbname: 'db_touno' }).then(async () => {
-        console.log(`[${grant.auth}] OAuth2 Step-3 -- Database Connected.`)
-        let item = await OAuth.findOne({ name: grant.auth })
 
-        let commited = {
-          name: grant.auth,
-          client_id: `${data.client_id}|${data.client_secret}`,
-          refresh_token: token.refresh_token,
-          expire: moment(),
-          state: client[grant.auth].state || null,
-          scope: token
-        }
+      await MongooseOpen({ user: 'admin', pass: 'ar00t-touno', dbname: 'db_touno' })
+      console.log(`[${grant.auth}] OAuth2 Step-3 -- Database Connected.`)
 
-        if (!item) {
-          await new OAuth(commited).save()
-        } else {
-          await OAuth.update({ _id: item._id }, { $set: commited })
-        }
-        console.log(`[${grant.auth}] OAuth2 Step-4 -- Token ${!item ? 'created' : 'updated'} (${elapsed.nanoseconds()}).`)
-      }).catch(Raven)
+      let item = await OAuth.findOne({ name: grant.auth })
+      let commited = {
+        name: grant.auth,
+        client_id: `${data.client_id}|${data.client_secret}`,
+        refresh_token: token.refresh_token,
+        expire: moment(),
+        state: client[grant.auth].state || null,
+        scope: token
+      }
+
+      if (!item) {
+        await new OAuth(commited).save()
+      } else {
+        await OAuth.update({ _id: item._id }, { $set: commited })
+      }
+      console.log(`[${grant.auth}] OAuth2 Step-4 -- Token ${!item ? 'created' : 'updated'} (${elapsed.nanoseconds()}).`)
 
       let closeMongo = () => {
         console.log(`[${grant.auth}] OAuth2 Step-5 -- Database Disconnected.`)
