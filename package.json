@@ -7,7 +7,7 @@
     "dev": "node test/index.js",
     "dev:win": "cls && npm run lint && npm run dev",
     "lint": "eslint --ext .js --ignore-path .gitignore .",
-    "test": "node test"
+    "test": "npm run lint"
   },
   "repository": {
     "type": "git",

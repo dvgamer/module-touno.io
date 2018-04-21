@@ -11,5 +11,13 @@ module.exports = [
       state: String,
       scope: Object
     })
+  },
+  {
+    id: 'Account',
+    name: 'oauth-account',
+    schema: mongoose.Schema({
+      username: String,
+      active: Boolean
+    })
   }
 ]
