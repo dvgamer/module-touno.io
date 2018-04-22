@@ -1,6 +1,14 @@
 const mongoose = require('mongoose')
 module.exports = [
   {
+    id: 'Touno',
+    name: 'app-touno.io',
+    schema: mongoose.Schema({
+      config: String,
+      data: mongoose.Schema.Types.Mixed
+    })
+  },
+  {
     id: 'OAuth',
     name: 'oauth-3rd',
     schema: mongoose.Schema({
@@ -25,10 +33,11 @@ module.exports = [
     id: 'LogRequest',
     name: 'log-request',
     schema: mongoose.Schema({
+      url: String,
       token: Boolean,
-      access: Number,
       ipaddress: String,
-      url: String
+      requested: Date,
+      created: Date
     })
   }
 ]
