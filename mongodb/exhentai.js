@@ -1,11 +1,3 @@
-{
-  User: mongoose.Schema({
-    nickname: String,
-    username: String,
-    last_login: Date,
-    online: Boolean
-  }),
-  Manga: 
 const mongoose = require('mongoose')
 
 module.exports = [
