@@ -20,5 +20,15 @@ module.exports = [
       token: String,
       active: Boolean
     })
+  },
+  {
+    id: 'LogRequest',
+    name: 'log-request',
+    schema: mongoose.Schema({
+      token: Boolean,
+      access: Number,
+      ipaddress: String,
+      url: String
+    })
   }
 ]
