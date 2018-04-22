@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 
 module.exports = [
   {
-    id: 'exManga',
+    id: 'ExManga',
     name: 'db-exhentai.org',
     schema: mongoose.Schema({
       username: String,
@@ -19,7 +19,7 @@ module.exports = [
     })
   },
   {
-    id: 'exUser',
+    id: 'ExUser',
     name: 'db-exhentai-user',
     schema: mongoose.Schema({
       guest: String,
