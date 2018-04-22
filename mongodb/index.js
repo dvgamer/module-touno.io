@@ -26,6 +26,7 @@ db = db.concat(require('./nicehash'))
 db = db.concat(require('./wakatime'))
 db = db.concat(require('./github'))
 db = db.concat(require('./schedule'))
+db = db.concat(require('./exhentai'))
 
 for (var i = 0; i < db.length; i++) {
   mongodb[db[i].id] = mongoose.model(db[i].name, db[i].schema, db[i].name)
