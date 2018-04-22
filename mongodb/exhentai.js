@@ -13,6 +13,7 @@ module.exports = [
       size: String,
       language: String,
       status: String,
+      requested: Date,
       created: Date,
       success: Boolean
     })
@@ -21,9 +22,10 @@ module.exports = [
     id: 'exUser',
     name: 'db-exhentai-user',
     schema: mongoose.Schema({
+      guest: String,
       nickname: String,
       username: String,
-      last_login: Date,
+      expire: Date,
       online: Boolean
     })
   }
