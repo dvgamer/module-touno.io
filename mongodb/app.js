@@ -17,6 +17,7 @@ module.exports = [
     name: 'oauth-account',
     schema: mongoose.Schema({
       username: String,
+      token: String,
       active: Boolean
     })
   }

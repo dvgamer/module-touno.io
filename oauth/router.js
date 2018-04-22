@@ -1,7 +1,6 @@
-const { OAuth, MongooseOpen, MongooseClose } = require('../mongodb')
+const { OAuth } = require('../mongodb')
 const { debug } = require('../helper/variables')
 const Time = require('../helper/time')
-const Raven = require('../helper/raven')
 const client = require('./clients')
 
 const express = require('express')
@@ -40,9 +39,7 @@ module.exports = grant => {
       console.log(`[${grant.auth}] OAuth2 Step-1 -- Authorized ${query.code}`)
       let token = await request({ method: 'POST', uri: client[grant.auth].token, form: data, json: true })
 
-      console.log(`[${grant.auth}] OAuth2 Step-2 -- Token verify`)
-
-      console.log(`[${grant.auth}] OAuth2 Step-3 -- Database Connected.`)
+      console.log(`[${grant.auth}] OAuth2 Step-2 -- Token verify ${token ? 'pass.' : 'fail.'}`)
 
       let item = await OAuth.findOne({ name: grant.auth })
       let commited = {
@@ -59,11 +56,7 @@ module.exports = grant => {
       } else {
         await OAuth.update({ _id: item._id }, { $set: commited })
       }
-      console.log(`[${grant.auth}] OAuth2 Step-4 -- Token ${!item ? 'created' : 'updated'} (${elapsed.nanoseconds()}).`)
-
-      let closeMongo = () => {
-        console.log(`[${grant.auth}] OAuth2 Step-5 -- Database Disconnected.`)
-      }
+      console.log(`[${grant.auth}] OAuth2 Step-3 -- Token ${!item ? 'created' : 'updated'} (${elapsed.nanoseconds()}).`)
 
       res.redirect(`${host}/`)
     }
