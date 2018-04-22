@@ -42,7 +42,6 @@ module.exports = grant => {
 
       console.log(`[${grant.auth}] OAuth2 Step-2 -- Token verify`)
 
-      await MongooseOpen({ user: 'admin', pass: 'ar00t-touno', dbname: 'db_touno' })
       console.log(`[${grant.auth}] OAuth2 Step-3 -- Database Connected.`)
 
       let item = await OAuth.findOne({ name: grant.auth })
@@ -65,9 +64,6 @@ module.exports = grant => {
       let closeMongo = () => {
         console.log(`[${grant.auth}] OAuth2 Step-5 -- Database Disconnected.`)
       }
-      // hooks to execute after response
-      res.on('finish', () => MongooseClose().then(closeMongo).catch(Raven))
-      res.on('close', () => MongooseClose().then(closeMongo).catch(Raven))
 
       res.redirect(`${host}/`)
     }
