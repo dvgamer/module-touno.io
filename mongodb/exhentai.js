@@ -2,8 +2,8 @@ const mongoose = require('mongoose')
 
 module.exports = [
   {
-    id: 'ExManga',
-    name: 'db-exhentai.org',
+    id: 'ExHistory',
+    name: 'db-exhentai-history',
     schema: mongoose.Schema({
       username: String,
       name: String,
@@ -12,10 +12,21 @@ module.exports = [
       page: Number,
       size: String,
       language: String,
-      status: String,
-      requested: Date,
       created: Date,
-      success: Boolean
+      updated: Date,
+      downloaded: Number
+    })
+  },
+  {
+    id: 'ExQueue',
+    name: 'db-exhentai-queue',
+    schema: mongoose.Schema({
+      username: String,
+      name: String,
+      link: String,
+      page: Number,
+      size: String,
+      status: String
     })
   },
   {
