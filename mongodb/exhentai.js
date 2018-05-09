@@ -5,7 +5,6 @@ module.exports = [
     id: 'ExHistory',
     name: 'db-exhentai-history',
     schema: mongoose.Schema({
-      username: String,
       name: String,
       cover: String,
       link: String,
@@ -21,7 +20,7 @@ module.exports = [
     id: 'ExQueue',
     name: 'db-exhentai-queue',
     schema: mongoose.Schema({
-      username: String,
+      user_id: String,
       name: String,
       link: String,
       page: Number,
@@ -34,7 +33,7 @@ module.exports = [
     id: 'ExUser',
     name: 'db-exhentai-user',
     schema: mongoose.Schema({
-      guest: String,
+      user_id: String,
       nickname: String,
       username: String,
       expire: Date,
