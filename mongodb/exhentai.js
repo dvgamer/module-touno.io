@@ -26,6 +26,7 @@ module.exports = [
       link: String,
       page: Number,
       size: String,
+      requested: Date,
       status: String
     })
   },
