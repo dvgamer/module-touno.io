@@ -1,5 +1,6 @@
 const consola = require('consola')
-const { isDev } = require('./variables.js')
+const { isDev } = require('./variables')
+const Raven = require('./raven')
 
 module.exports = {
   log (...msg) {
@@ -24,5 +25,16 @@ module.exports = {
     console.log()
     consola.error(msg.join(' '))
     console.log()
+  },
+  progress: {
+    begin (msg) {
+
+    },
+    end (msg) {
+
+    },
+    set (min, max) {
+
+    }
   }
 }

@@ -1,5 +1,5 @@
+const debuger = require('./helper/debuger')
 const Time = require('./helper/time')
-const Variables = require('./helper/variables')
 const Raven = require('./helper/raven')
 const MongoDB = require('./mongodb')
 const oAuth = require('./oauth')
@@ -10,6 +10,6 @@ module.exports = {
   MongoDB: MongoDB,
   Notify: Notify,
   Time: Time,
-  Variable: Variables,
+  debuger: debuger,
   Raven: Raven
 }

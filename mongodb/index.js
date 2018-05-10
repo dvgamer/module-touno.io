@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 mongoose.Promise = require('q').Promise
 
-const { debug } = require('../helper/variables')
+const { isDev } = require('../helper/variables')
 
 let db = []
 let mongodb = {
@@ -11,13 +11,13 @@ let mongodb = {
     const MONGODB = process.env.MONGODB || '127.0.0.1:27017'
     const login = { user: options.user || process.env.MONGODB_USER, pass: options.pass || process.env.MONGODB_PASS }
     const dbo = `mongodb://${MONGODB}/${options.dbname || process.env.MONGODB_NAME}${options.user ? '?authMode=scram-sha1?authSource=admin' : ''}`
-    if (debug) console.log(`[MongoDB] ${mongoose.connection.readyState}:Connecting... 'mongodb://${MONGODB}/${options.dbname}'`)
+    if (isDev) console.log(`[MongoDB] ${mongoose.connection.readyState}:Connecting... 'mongodb://${MONGODB}/${options.dbname}'`)
     await mongoose.connect(dbo, login)
   },
   tests: mongoose.model('db-tests', mongoose.Schema({ any: mongoose.Schema.Types.Mixed }), 'db-tests'),
   MongooseClose: async () => {
     await mongoose.connection.close()
-    if (debug) console.log(`[MongoDB] Close connection.`)
+    if (isDev) console.log(`[MongoDB] Close connection.`)
   }
 }
 
