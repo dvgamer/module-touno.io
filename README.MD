@@ -1,4 +1,4 @@
-# Touno.io ![Travis](https://img.shields.io/travis/dvgamer/module-touno.io.svg?style=flat-square)
+# Touno.io ![Travis](https://img.shields.io/travis/touno-project/module.core-systems.svg?style=flat-square)
 
 ### Requirement Environment
 ```yml
@@ -18,5 +18,22 @@ LINE_ID
 
 ```
 
+----------
+### Helper
+##### `object` debuger
+  - **log** `function(...msg)` message log normal
+  - **progress** `object`
+    - begin `function(...msg)`
+    - set `function(min, max)`
+    - end `function(...msg)`
+  - **start** `function(...msg)` start log and color green.
+  - **success** `function(...msg)` start log and color green.
+  - **info** `function(...msg)` info log and color blue.
+  - **error** `function(...msg)` error log and color red.
+##### `object` Raven
+  - **set** `function(config)` set config Raven object on exception.
+  - **error** `function(ex)` reporting error to sentry.
+  - **warning** `function(ex)` reporting warning to sentry.
+----------
 ### License
 MIT © 2018 Touno™
