@@ -1,6 +1,5 @@
 const consola = require('consola')
 const { isDev } = require('./variables')
-const Raven = require('./raven')
 
 module.exports = {
   log (...msg) {
