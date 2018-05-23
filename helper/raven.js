@@ -17,9 +17,8 @@ module.exports = {
   },
   install (data) {
     config = data
-    if (data) throw new Error('Raven not set configuration.')
+    if (!data) throw new Error('Raven not set configuration.')
     if (!isDev) {
-      Raven.disableConsoleAlerts()
       // RAVEN_CONFIG=https://bf6e4ca97c6f45b29017c7cd0a7626fd@sentry.io/1204359
       if (!process.env.RAVEN_CONFIG) throw new Error('`RAVEN_CONFIG` ')
     }
