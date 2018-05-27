@@ -11,6 +11,7 @@ const nameException = `https://hooks.slack.com/services/T5SPCH1F0/B6W8SQS4T/zgqj
 const nameNotify = `https://hooks.slack.com/services/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`
 const nameGithub = `https://hooks.slack.com/services/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`
 const nameWakatime = `https://hooks.slack.com/services/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`
+const nameExHentai = `https://hooks.slack.com/services/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`
 const client = (token, msg) => {
   const cb = new api.Client({ channelAccessToken: token })
   return cb.pushMessage(apiLineID, msg)
@@ -49,6 +50,7 @@ module.exports = {
     Exception: (msg, channel, name) => webhook(nameException, name, msg, channel),
     Touno: (msg, channel, name) => webhook(nameTouno, name, msg, channel),
     Github: (msg, channel, name) => webhook(nameGithub, name, msg, channel),
-    Waka: (msg, channel, name) => webhook(nameWakatime, name, msg, channel)
+    Waka: (msg, channel, name) => webhook(nameWakatime, name, msg, channel),
+    ExHentai: (msg, channel, name) => webhook(nameExHentai, name, msg, channel)
   }
 }
