@@ -1,7 +1,7 @@
-# Touno.io ![Travis](https://img.shields.io/travis/touno-project/module.core-systems.svg?style=flat-square)
+# TOUNO.io ![Travis](https://travis-ci.org/touno-project/module.core-systems.svg?branch=master)
 
 ### Requirement Environment
-```yml
+```ini
 RAVEN_CONFIG=https://{PUBLIC_KEY}:{SECRET_KEY}@sentry.io/{PROJECT_ID}
 
 GITHUB_ID
@@ -30,6 +30,16 @@ LINE_ID
   - **success** `function(...msg)` start log and color green.
   - **info** `function(...msg)` info log and color blue.
   - **error** `function(...msg)` error log and color red.
+
+**sample**
+```javascript
+import { debuger } from 'touno.io'
+
+debuger.log('')
+debuger.success('completed.')
+debuger.error(new Error('Error Test'))
+```
+
 ##### `object` Raven
   - **set** `function(config)` set config Raven object on exception.
   - **error** `function(ex)` reporting error to sentry.
