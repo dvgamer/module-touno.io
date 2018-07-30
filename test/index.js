@@ -6,7 +6,7 @@ const Touno = require('../index.js')
 consola.info(`Complie ${Object.keys(Touno).length} objects.`)
 
 consola.withScope('UnitTest')
-UnitTest = async () => {
+let UnitTest = async () => {
   consola.info(`./helper/debuger.js Testing... `)
   await debuger()
 }
