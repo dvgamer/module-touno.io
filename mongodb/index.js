@@ -7,13 +7,14 @@ let db = []
 let mongodb = {
   MongooseOpen: async options => {
     debuger.scope('MongoDB')
-    debuger.log(`Connection is 'mongodb://${login.user}@${MONGODB}/${MONGODBNAME}'.`)
     // { user: 'admin', pass: 'admin', dbname: 'test' }
     options = options || {}
     const MONGODB = process.env.MONGODB || 'db-mongo:27017'
     const login = { user: options.user || process.env.MONGODB_USER, pass: options.pass || process.env.MONGODB_PASS }
     const MONGODBNAME = options.dbname || process.env.MONGODB_NAME
     const dbo = `mongodb://${MONGODB}/${MONGODBNAME}${login.user ? '?authMode=scram-sha1?authSource=admin' : ''}`
+
+    debuger.log(`Connection is 'mongodb://${login.user}@${MONGODB}/${MONGODBNAME}'.`)
     await mongoose.connect(dbo, login)
     debuger.log(`${mongoose.connection.readyState}: Connected.`)
   },
