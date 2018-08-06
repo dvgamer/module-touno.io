@@ -3,29 +3,36 @@ mongoose.Promise = require('q').Promise
 
 const debuger = require('../helper/debuger')
 
-let db = []
 let mongodb = {
   MongooseOpen: async options => {
     debuger.scope('MongoDB')
     // { user: 'admin', pass: 'admin', dbname: 'test' }
     options = options || {}
     const MONGODB = process.env.MONGODB || 'db-mongo:27017'
-    const login = { user: options.user || process.env.MONGODB_USER, pass: options.pass || process.env.MONGODB_PASS }
-    const MONGODBNAME = options.dbname || process.env.MONGODB_NAME
-    const dbo = `mongodb://${MONGODB}/${MONGODBNAME}${login.user ? '?authMode=scram-sha1?authSource=admin' : ''}`
+    const login = { user: process.env.MONGODB_USER, pass: process.env.MONGODB_PASS }
+    const MONGODBNAME = process.env.MONGODB_NAME
+    const dbo = `mongodb://${MONGODB}/${MONGODBNAME}${login.user ? '?authMode=scram-sha1' : ''}`
+
+    if (!login.user || !login.pass) throw new Error('mongodb not authentication.')
+    if (!MONGODB) throw new Error('mongodb server not found.')
+    if (!MONGODBNAME) throw new Error('mongodb not database default.')
 
     debuger.log(`Connection is 'mongodb://${login.user}@${MONGODB}/${MONGODBNAME}'.`)
-    await mongoose.connect(dbo, login)
-    debuger.log(`${mongoose.connection.readyState}: Connected.`)
+    delete options.user
+    delete options.pass
+    delete options.dbname
+    await mongoose.connect(dbo, options)
+    debuger.log(`Connected. (State is ${mongoose.connection.readyState})`)
   },
   tests: mongoose.model('db-tests', mongoose.Schema({ any: mongoose.Schema.Types.Mixed }), 'db-tests'),
   MongooseClose: async () => {
     await mongoose.connection.close()
     debuger.scope('MongoDB')
-    debuger.log(`${mongoose.connection.readyState}: Closed.`)
+    debuger.log(`Closed. (State is ${mongoose.connection.readyState})`)
   }
 }
 
+let db = []
 db = db.concat(require('./app'))
 db = db.concat(require('./nicehash'))
 db = db.concat(require('./wakatime'))

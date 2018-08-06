@@ -4,8 +4,11 @@ const { isDev } = require('./variables')
 
 let config = null
 module.exports = {
-  set (data) {
-    config = Object.assign(config, data)
+  Tracking (asyncCallback) {
+    if (!(asyncCallback instanceof Promise)) throw new Error('Tracking not Promise.')
+    asyncCallback().catch(ex => {
+      debuger.error(ex)
+    })
   },
   warning (ex) {
     Raven.captureMessage(ex instanceof Error ? ex.message : ex, {
