@@ -1,13 +1,13 @@
 const debuger = require('./helper/debuger')
 const Time = require('./helper/time')
 const Raven = require('./helper/raven')
-const MongoDB = require('./mongodb')
+const TounoDB = require('./db-touno')
 const oAuth = require('./oauth')
 const Notify = require('./notify')
 
 module.exports = {
   oAuth: oAuth,
-  MongoDB: MongoDB,
+  TounoDB: TounoDB,
   Notify: Notify,
   Time: Time,
   debuger: debuger,

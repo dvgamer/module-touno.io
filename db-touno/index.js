@@ -7,21 +7,15 @@ let mongodb = {
   MongooseOpen: async options => {
     debuger.scope('MongoDB')
     // { user: 'admin', pass: 'admin', dbname: 'test' }
-    options = options || {}
-    const MONGODB = process.env.MONGODB || 'db-mongo:27017'
-    const login = { user: process.env.MONGODB_USER, pass: process.env.MONGODB_PASS }
-    const MONGODBNAME = process.env.MONGODB_NAME
-    const dbo = `mongodb://${MONGODB}/${MONGODBNAME}${login.user ? '?authMode=scram-sha1' : ''}`
+    const TOUNODB_URI = process.env.TOUNODB_URI
 
-    if (!login.user || !login.pass) throw new Error('mongodb not authentication.')
-    if (!MONGODB) throw new Error('mongodb server not found.')
-    if (!MONGODBNAME) throw new Error('mongodb not database default.')
+    if (!TOUNODB_URI) {
+      debuger.error(new Error('mongodb not mongodb uri default.'))
+      return
+    }
 
-    debuger.log(`Connection is 'mongodb://${login.user}@${MONGODB}/${MONGODBNAME}'.`)
-    delete options.user
-    delete options.pass
-    delete options.dbname
-    await mongoose.connect(dbo, options)
+    debuger.log(`Connection is '${TOUNODB_URI}'.`)
+    await mongoose.connect(TOUNODB_URI, options)
     debuger.log(`Connected. (State is ${mongoose.connection.readyState})`)
   },
   tests: mongoose.model('db-tests', mongoose.Schema({ any: mongoose.Schema.Types.Mixed }), 'db-tests'),
