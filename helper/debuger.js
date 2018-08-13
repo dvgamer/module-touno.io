@@ -36,7 +36,6 @@ module.exports = {
     }
   },
   audit (message, timeline, badge, tag) {
-    let me = this
     let log = new Audit({
       created: new Date(),
       message: message,
@@ -46,8 +45,8 @@ module.exports = {
     })
     log.save(() => {
       if (!isDev) return
-      me.scope('Audit')
-      me.log('Log saved', message)
+      let log = consola.withScope('Audit')
+      log.info(`Server log '${message}' saved.`)
     })
   },
   progress: {
