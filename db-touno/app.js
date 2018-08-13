@@ -51,5 +51,17 @@ module.exports = [
       schedule: Date,
       created: Date
     })
+  },
+  {
+    id: 'Audit',
+    name: 'db-audit',
+    schema: mongoose.Schema({
+      created: Date,
+      message: String,
+      timeline: String,
+      active: String,
+      badge: String,
+      tag: Array
+    })
   }
 ]

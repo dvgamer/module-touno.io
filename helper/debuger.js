@@ -1,6 +1,7 @@
 const consola = require('consola')
 const { isDev } = require('./variables')
 const chalk = require('chalk')
+const { Audit } = require('./db-touno')
 
 let scopeName = null
 let logger = consola
@@ -33,6 +34,21 @@ module.exports = {
       logger.error(error.message)
       console.log(require('youch-terminal')(output))
     }
+  },
+  audit (message, timeline, badge, tag) {
+    let me = this
+    let log = new Audit({
+      created: new Date(),
+      message: message,
+      timeline: timeline || null,
+      badge: badge || null,
+      tag: tag || []
+    })
+    log.save(() => {
+      if (!isDev) return
+      me.scope('Audit')
+      me.log('Log saved', message)
+    })
   },
   progress: {
     begin (msg) {
