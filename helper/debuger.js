@@ -26,12 +26,13 @@ module.exports = {
     logger.info(msg.join(' '))
   },
   async error (error) {
-    if (!isDev || !error) return
+    if (!error) return
     if (error instanceof Error) {
       const Youch = require('youch')
       let output = await new Youch(error, {}).toJSON()
-      logger.error(error.message)
       console.log(require('youch-terminal')(output))
+    } else {
+      logger.error(error.message)
     }
   },
   audit (message, timeline, badge, tag) {

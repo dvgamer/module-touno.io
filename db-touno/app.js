@@ -14,11 +14,10 @@ module.exports = [
     name: 'oauth-3rd',
     schema: mongoose.Schema({
       name: String,
-      client_id: String,
-      refresh_token: String,
-      expire: Date,
+      client: String,
+      updated: Date,
       state: String,
-      scope: Object
+      token: Object
     })
   },
   {

@@ -3,16 +3,18 @@ module.exports = {
     type: 'code',
     id: process.env.ANILIST_ID,
     secret: process.env.ANILIST_SECRET,
-    auth: 'https://anilist.co/api/auth/authorize',
-    token: 'https://anilist.co/api/auth/access_token'
+    host: 'https://anilist.co',
+    auth: '/api/auth/authorize',
+    token: '/api/auth/access_token'
   },
   'wakatime.com': {
     type: 'code',
     id: process.env.WAKA_ID,
     secret: process.env.WAKA_SECRET,
     scope: 'email,read_stats,write_logged_time,read_logged_time',
-    auth: 'https://wakatime.com/oauth/authorize',
-    token: 'https://wakatime.com/oauth/token'
+    host: 'https://wakatime.com',
+    auth: '/oauth/authorize',
+    token: '/oauth/token'
   },
   'github.com': {
     type: 'code',
@@ -20,23 +22,26 @@ module.exports = {
     secret: process.env.GITHUB_SECRET,
     scope: 'user public',
     state: 'touno-oaiurx',
-    auth: 'https://github.com/login/oauth/authorize',
-    token: 'https://github.com/login/oauth/access_token'
+    host: 'https://github.com',
+    auth: '/login/oauth/authorize',
+    token: '/login/oauth/access_token'
   },
   'imgur.com': {
     type: 'code',
     id: process.env.IMGUR_ID,
     secret: process.env.IMGUR_SECRET,
     state: 'touno-manga',
-    auth: 'https://api.imgur.com/oauth2/authorize',
-    token: 'https://api.imgur.com/oauth2/token'
+    host: 'https://api.imgur.com',
+    auth: '/oauth2/authorize',
+    token: '/oauth2/token'
   },
   'coins': {
     type: 'code',
     id: process.env.COINS_ID,
     secret: process.env.COINS_SECRET,
     scope: 'buyorder+sellorder+history',
-    auth: 'https://coins.ph/user/api/authorize',
-    token: 'https://coins.ph/user/oauthtoken'
+    host: 'https://coins.ph',
+    auth: '/user/api/authorize',
+    token: '/user/oauthtoken'
   }
 }
