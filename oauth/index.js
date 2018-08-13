@@ -1,4 +1,4 @@
-const { OAuth } = require('../mongodb')
+const { OAuth } = require('../db-touno')
 const client = require('./clients')
 
 const moment = require('moment')
