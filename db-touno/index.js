@@ -6,16 +6,12 @@ const debuger = require('../helper/debuger')
 let mongodb = {
   TounoOpen: async options => {
     debuger.scope('MongoDB')
-    // { user: 'admin', pass: 'admin', dbname: 'test' }
     const TOUNODB_URI = process.env.TOUNODB_URI
 
-    if (!TOUNODB_URI) {
-      debuger.error(new Error('mongodb not mongodb uri default.'))
-      return
-    }
+    if (!TOUNODB_URI) throw new Error('mongodb not mongodb uri default.')
 
     debuger.log(`Connection is '${TOUNODB_URI}'.`)
-    await mongoose.connect(TOUNODB_URI, options)
+    await mongoose.connect(TOUNODB_URI, Object.assign(options, { useNewUrlParser: true }))
     debuger.log(`Connected. (State is ${mongoose.connection.readyState})`)
   },
   tests: mongoose.model('db-tests', mongoose.Schema({ any: mongoose.Schema.Types.Mixed }), 'db-tests'),
