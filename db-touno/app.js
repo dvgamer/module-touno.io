@@ -54,7 +54,7 @@ module.exports = [
   },
   {
     id: 'Audit',
-    name: 'db-audit',
+    name: 'log-audit',
     schema: mongoose.Schema({
       created: Date,
       message: String,
