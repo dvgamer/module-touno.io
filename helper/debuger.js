@@ -1,7 +1,7 @@
 const consola = require('consola')
 const { isDev } = require('./variables')
 const chalk = require('chalk')
-const { Audit } = require('./db-touno')
+const { Audit } = require('../db-touno')
 
 let scopeName = null
 let logger = consola
