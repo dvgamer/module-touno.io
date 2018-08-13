@@ -39,5 +39,16 @@ module.exports = [
       requested: Date,
       created: Date
     })
+  },
+  {
+    id: 'Notification',
+    name: 'db-notification',
+    schema: mongoose.Schema({
+      endpoint: String,
+      message: String,
+      notify: Boolean,
+      schedule: Date,
+      created: Date
+    })
   }
 ]
