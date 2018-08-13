@@ -1,9 +1,6 @@
 const debuger = require('./helper/debuger')
 const Time = require('./helper/time')
 const Raven = require('./helper/raven')
-const TounoDB = require('./db-touno')
-const oAuth = require('./oauth')
-const Notify = require('./notify')
 
 const ProcessClose = afterCallBack => {
   let abortProcess = async () => {
@@ -18,9 +15,6 @@ const ProcessClose = afterCallBack => {
 }
 
 module.exports = {
-  oAuth,
-  TounoDB,
-  Notify,
   Time,
   debuger,
   Raven,
