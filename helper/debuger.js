@@ -1,7 +1,6 @@
 const consola = require('consola')
 const { isDev } = require('./variables')
 const chalk = require('chalk')
-const { Audit } = require('../db-touno')
 
 let scopeName = null
 let logger = consola
@@ -36,6 +35,7 @@ module.exports = {
     }
   },
   audit (message, timeline, badge, tag) {
+    const { Audit } = require('../db-touno')
     let log = new Audit({
       created: new Date(),
       message: message,
