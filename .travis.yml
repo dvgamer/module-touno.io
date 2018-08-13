@@ -7,15 +7,17 @@ before_script:
 
 script:
   - npm run eslint
-  - npm run test
 
 cache:
   directories:
     - node_modules
 
-notifications:
-  slack:
-    rooms:
-      - touno-io:bAvs98HimZWCvolKDxgPwxEn
-    on_success: change
-    on_failure: always
+# notifications:
+#   webhooks:
+#     urls:
+#       - https://endpoint.touno.io/travis-ci
+#     on_success: change # default: always
+#     on_failure: always # default: always
+#     on_start: never    # default: never
+#     on_cancel: never   # default: always
+#     on_error: always   # default: always
