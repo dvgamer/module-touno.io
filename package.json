@@ -38,7 +38,10 @@
     "q": "^1.5.1",
     "raven": "^2.6.3",
     "request": "^2.88.0",
-    "request-promise": "^4.2.2"
+    "request-promise": "^4.2.2",
+    "simple-oauth2": "^2.2.1",
+    "youch": "^2.0.9",
+    "youch-terminal": "^1.0.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.6",
@@ -48,8 +51,6 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.1.0",
-    "youch": "^2.0.9",
-    "youch-terminal": "^1.0.0"
+    "eslint-plugin-standard": "^3.1.0"
   }
 }
