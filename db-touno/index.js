@@ -11,7 +11,7 @@ let mongodb = {
     if (!TOUNODB_URI) throw new Error('mongodb not mongodb uri default.')
 
     debuger.log(`Connection is '${TOUNODB_URI}'.`)
-    await mongoose.connect(TOUNODB_URI, Object.assign(options, { useNewUrlParser: true }))
+    await mongoose.connect(TOUNODB_URI, Object.assign({ useNewUrlParser: true }, options || {}))
     debuger.log(`Connected. (State is ${mongoose.connection.readyState})`)
   },
   tests: mongoose.model('db-tests', mongoose.Schema({ any: mongoose.Schema.Types.Mixed }), 'db-tests'),
