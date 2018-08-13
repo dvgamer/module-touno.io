@@ -4,7 +4,7 @@ mongoose.Promise = require('q').Promise
 const debuger = require('../helper/debuger')
 
 let mongodb = {
-  MongooseOpen: async options => {
+  TounoOpen: async options => {
     debuger.scope('MongoDB')
     // { user: 'admin', pass: 'admin', dbname: 'test' }
     const TOUNODB_URI = process.env.TOUNODB_URI
@@ -19,7 +19,7 @@ let mongodb = {
     debuger.log(`Connected. (State is ${mongoose.connection.readyState})`)
   },
   tests: mongoose.model('db-tests', mongoose.Schema({ any: mongoose.Schema.Types.Mixed }), 'db-tests'),
-  MongooseClose: async () => {
+  TounoClose: async () => {
     await mongoose.connection.close()
     debuger.scope('MongoDB')
     debuger.log(`Closed. (State is ${mongoose.connection.readyState})`)
