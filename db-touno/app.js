@@ -4,7 +4,8 @@ module.exports = [
     id: 'Touno',
     name: 'app-touno.io',
     schema: mongoose.Schema({
-      config: String,
+      group: String,
+      item: String,
       data: mongoose.Schema.Types.Mixed
     })
   },
