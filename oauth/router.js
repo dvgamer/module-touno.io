@@ -27,11 +27,11 @@ module.exports = grant => {
 
   router.get(`/${grant.name}/accesstoken`, async (req, res) => {
     debuger.scope(`[${grant.auth}]`)
-
+    debuger.log(`authorization step-4 -- refresh Token`)
     let item = await OAuth.findOne({ name: grant.auth })
     if (!item || !item.token) {
-      debuger.log(`authorization step-error -- Please validate auth`)
-      res.statusCode(500).end()
+      debuger.log(`authorization error -- Please validate auth`)
+      res.statusCode(500)
       return
     }
     let elapsed = new Time()
@@ -44,13 +44,17 @@ module.exports = grant => {
     }
 
     try {
-      accessToken = await accessToken.refresh()
-      await OAuth.update({ _id: item._id }, { $set: { token: accessToken, updated: moment().toDate() } })
-      debuger.log(`authorization step-4 -- refreshToken (${elapsed.nanoseconds()})`)
+      accessToken = await accessToken.refresh({
+        refresh_token: item.token.refresh_token,
+        client_id: client.id,
+        client_secret: client.secret
+      })
+      await OAuth.update({ _id: item._id }, { $set: { token: accessToken.token, updated: moment().toDate() } })
+      debuger.log(`authorization step-5 -- refreshToken (${elapsed.nanoseconds()})`)
       res.end()
     } catch (error) {
-      debuger.log(`authorization step-error -- refreshing token ${error.message}`)
-      res.statusCode(500).end()
+      debuger.log(`authorization error -- refreshing token ${error.message}`)
+      res.statusCode(500)
     }
   })
 
@@ -78,8 +82,8 @@ module.exports = grant => {
       try {
         const result = await oauth2.authorizationCode.getToken({
           code: query.code,
-          client_id: credentials.client.id,
-          client_secret: credentials.client.secret,
+          client_id: client.id,
+          client_secret: client.secret,
           state: query.state,
           redirect_uri: uri
         })
@@ -89,7 +93,7 @@ module.exports = grant => {
 
         let commited = {
           name: grant.auth,
-          client: `${credentials.client.id}|${credentials.client.secret}`,
+          client: `${client.id}|${client.secret}`,
           updated: moment().toDate(),
           state: state,
           token: result
