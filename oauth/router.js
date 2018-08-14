@@ -27,7 +27,6 @@ module.exports = grant => {
 
   router.get(`/${grant.name}/accesstoken`, async (req, res) => {
     debuger.scope(`[${grant.auth}]`)
-    debuger.log(`authorization step-4 -- refresh Token`)
     let item = await OAuth.findOne({ name: grant.auth })
     if (!item || !item.token) {
       debuger.log(`authorization error -- Please validate auth`)
@@ -42,6 +41,7 @@ module.exports = grant => {
       res.end()
       return
     }
+    debuger.log(`authorization step-4 -- refreshing Token`)
 
     try {
       accessToken = await accessToken.refresh({
@@ -51,8 +51,10 @@ module.exports = grant => {
       })
       await OAuth.update({ _id: item._id }, { $set: { token: accessToken.token, updated: moment().toDate() } })
       debuger.log(`authorization step-5 -- refreshToken (${elapsed.nanoseconds()})`)
+      debuger.audit(`Authorization ${grant.auth} refresh token completed.`, 'success')
       res.end()
     } catch (error) {
+      debuger.audit(`Authorization ${grant.auth} refresh token fail.`, 'error')
       debuger.log(`authorization error -- refreshing token ${error.message}`)
       res.statusCode(500)
     }
@@ -102,8 +104,10 @@ module.exports = grant => {
         } else {
           await OAuth.update({ _id: item._id }, { $set: commited })
         }
+        debuger.audit(`Authorization ${grant.auth} access token completed.`, 'success')
         debuger.log(`authorization step-3 -- accessToken ${!item ? 'created' : 'updated'} (${elapsed.nanoseconds()})`)
       } catch (ex) {
+        debuger.audit(`Authorization ${grant.auth} access token fail.`, 'error')
         debuger.log(`authorization step-error -- getToken fail (${ex.message})`)
         debuger.error(ex)
       }
