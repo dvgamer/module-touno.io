@@ -76,7 +76,12 @@ module.exports = grant => {
       debuger.log(query)
 
       try {
-        const result = await oauth2.authorizationCode.getToken(query)
+        const result = await oauth2.authorizationCode.getToken({
+          code: query.code,
+          state: query.state,
+          redirect_uri: uri,
+          grant_type: client.type === 'code' ? 'authorization_code' : undefined
+        })
         debuger.log(result)
 
         let item = await OAuth.findOne({ name: grant.auth })
