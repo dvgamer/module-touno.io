@@ -64,7 +64,7 @@ module.exports = grant => {
 
     const uri = `${host}${baseUrl}/${grant.name}`
     const state = `${client.state ? `${client.state}_` : 'api-'}${randString(8)}`
-    const authorizationUri = oauth2.authorizationCode.authorizeURL({
+    const authorizationUri = oauth2.authorizationCo`de`.authorizeURL({
       redirect_uri: uri,
       scope: client.scope,
       state: state
@@ -76,7 +76,6 @@ module.exports = grant => {
     } else {
       let elapsed = new Time()
       debuger.log(`authorization step-1 -- authorized ${query.code}`)
-      debuger.log(req.url)
       debuger.log(query)
 
       try {
@@ -87,7 +86,6 @@ module.exports = grant => {
           state: query.state,
           redirect_uri: uri
         })
-        debuger.log(result)
 
         let item = await OAuth.findOne({ name: grant.auth })
 
