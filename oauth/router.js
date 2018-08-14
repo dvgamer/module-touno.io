@@ -57,7 +57,6 @@ module.exports = grant => {
   router.get(`/${grant.name}`, async (req, res) => {
     let { query, baseUrl } = req
     debuger.scope(`[${grant.auth}]`)
-    console.log(req.headers)
 
     const uri = `${host}${baseUrl}/${grant.name}`
     const state = `${client.state ? `${client.state}_` : 'api-'}${randString(8)}`
@@ -73,9 +72,11 @@ module.exports = grant => {
     } else {
       let elapsed = new Time()
       debuger.log(`authorization step-1 -- authorized ${query.code}`)
+      debuger.log(req.url)
+      debuger.log(query)
 
       try {
-        const result = await oauth2.authorizationCode.getToken({ code: query.code })
+        const result = await oauth2.authorizationCode.getToken(query)
         debuger.log(result)
 
         let item = await OAuth.findOne({ name: grant.auth })
@@ -94,8 +95,9 @@ module.exports = grant => {
           await OAuth.update({ _id: item._id }, { $set: commited })
         }
         debuger.log(`authorization step-3 -- accessToken ${!item ? 'created' : 'updated'} (${elapsed.nanoseconds()})`)
-      } catch (error) {
-        debuger.log(`authorization step-error -- getToken fail (${error.message})`)
+      } catch (ex) {
+        debuger.log(`authorization step-error -- getToken fail (${ex.message})`)
+        debuger.error(ex)
       }
 
       res.redirect(`${host}/`)
