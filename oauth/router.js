@@ -7,7 +7,7 @@ const express = require('express')
 const moment = require('moment')
 const router = express.Router()
 
-let host = !isDev ? `https://${process.env.VIRTUAL_HOST}` : `http://localhost:8080`
+let host = !isDev ? `https://${process.env.DOMAIN_NAME}` : `http://localhost:8080`
 
 module.exports = grant => {
   const client = require('./clients')[grant.auth]
