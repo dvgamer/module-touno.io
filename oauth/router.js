@@ -11,7 +11,6 @@ let host = !isDev ? `https://${process.env.VIRTUAL_HOST}` : `http://localhost:80
 
 module.exports = grant => {
   const client = require('./clients')[grant.auth]
-  console.log(client)
   const credentials = {
     client: {
       id: client.id,
@@ -28,24 +27,24 @@ module.exports = grant => {
   const oauth2 = require('simple-oauth2').create(credentials)
 
   router.get(`/${grant.name}/accesstoken`, async (req, res) => {
+    debuger.scope(`[${grant.auth}]`)
+    let item = await OAuth.findOne({ name: grant.auth })
+    if (!item || !item.token) {
+      debuger.log(`authorization error -- Please validate auth`)
+      res.statusCode(500)
+      return
+    }
+    let elapsed = new Time()
+    let accessToken = oauth2.accessToken.create(item.token)
+
+    // Check if the token is expired. If expired it is refreshed.
+    if (!accessToken.expired()) {
+      res.end()
+      return
+    }
+    debuger.log(`authorization step-4 -- refreshing Token`)
+
     try {
-      debuger.scope(`[${grant.auth}]`)
-      let item = await OAuth.findOne({ name: grant.auth })
-      if (!item || !item.token) {
-        debuger.log(`authorization error -- Please validate auth`)
-        res.statusCode(500)
-        return
-      }
-      let elapsed = new Time()
-      let accessToken = oauth2.accessToken.create(item.token)
-
-      // Check if the token is expired. If expired it is refreshed.
-      if (!accessToken.expired()) {
-        res.end()
-        return
-      }
-      debuger.log(`authorization step-4 -- refreshing Token`)
-
       accessToken = await accessToken.refresh({
         refresh_token: item.token.refresh_token,
         client_id: client.id,
@@ -63,26 +62,26 @@ module.exports = grant => {
   })
 
   router.get(`/${grant.name}`, async (req, res) => {
-    try {
-      let { query, baseUrl } = req
-      debuger.scope(`[${grant.auth}]`)
+    let { query, baseUrl } = req
+    debuger.scope(`[${grant.auth}]`)
 
-      const uri = `${host}${baseUrl}/${grant.name}`
-      const state = `${client.state ? `${client.state}_` : 'api-'}${randString(8)}`
-      const authorizationUri = oauth2.authorizationCo`de`.authorizeURL({
-        redirect_uri: uri,
-        scope: client.scope,
-        state: state
-      })
+    const uri = `${host}${baseUrl}/${grant.name}`
+    const state = `${client.state ? `${client.state}_` : 'api-'}${randString(8)}`
+    const authorizationUri = oauth2.authorizationCode.authorizeURL({
+      redirect_uri: uri,
+      scope: client.scope,
+      state: state
+    })
 
-      if (!query.code) {
-        debuger.log(`authorization step-0 -- redirect '${uri}'`)
-        res.redirect(authorizationUri)
-      } else {
-        let elapsed = new Time()
-        debuger.log(`authorization step-1 -- authorized ${query.code}`)
-        debuger.log(query)
+    if (!query.code) {
+      debuger.log(`authorization step-0 -- redirect '${uri}'`)
+      res.redirect(authorizationUri)
+    } else {
+      let elapsed = new Time()
+      debuger.log(`authorization step-1 -- authorized ${query.code}`)
+      debuger.log(query)
 
+      try {
         const result = await oauth2.authorizationCode.getToken({
           code: query.code,
           client_id: client.id,
@@ -108,14 +107,13 @@ module.exports = grant => {
         }
         debuger.audit(`Authorization ${grant.auth} access token completed.`, 'success')
         debuger.log(`authorization step-3 -- accessToken ${!item ? 'created' : 'updated'} (${elapsed.nanoseconds()})`)
-
-        res.redirect(`${host}/`)
+      } catch (ex) {
+        debuger.audit(`Authorization ${grant.auth} access token fail.`, 'error')
+        debuger.log(`authorization step-error -- getToken fail (${ex.message})`)
+        debuger.error(ex)
       }
-    } catch (ex) {
-      debuger.audit(`Authorization ${grant.auth} access token fail.`, 'error')
-      debuger.log(`authorization step-error -- getToken fail (${ex.message})`)
-      debuger.error(ex)
-      res.end()
+
+      res.redirect(`${host}/`)
     }
   })
   return router
