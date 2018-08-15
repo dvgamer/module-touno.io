@@ -10,19 +10,19 @@ module.exports = {
     logger = name ? consola.withScope(scopeName) : logger = consola
   },
   log (...msg) {
-    if (!isDev) return
+    // if (!isDev) return
     console.log(chalk.gray('- debug'), `${scopeName ? `${scopeName} ${chalk.blue('»')}` : ''}`, ...msg)
   },
   start (...msg) {
-    if (!isDev) return
+    // if (!isDev) return
     logger.start(msg.join(' '))
   },
   success (...msg) {
-    if (!isDev) return
+    // if (!isDev) return
     logger.success(msg.join(' '))
   },
   info (...msg) {
-    if (!isDev) return
+    // if (!isDev) return
     logger.info(msg.join(' '))
   },
   async error (error) {
@@ -45,7 +45,7 @@ module.exports = {
       tag: tag || []
     })
     log.save(() => {
-      if (!isDev) return
+      // if (!isDev) return
       let log = consola.withScope('Audit')
       log.info(`Server log '${message}' saved.`)
     })

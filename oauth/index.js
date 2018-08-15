@@ -11,7 +11,7 @@ module.exports = {
       return { error: 'not oauth type, Please validate auth.', uri: `https://touno.io/auth/${auth}` }
     } else {
       let host = !isDev ? APIENDPOINT : `https://touno.io`
-      
+
       debuger.log(`${host}/auth/${auth}/accesstoken`)
 
       item = await OAuth.findOne({ name: auth })
