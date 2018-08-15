@@ -1,5 +1,5 @@
 const consola = require('consola')
-const { isDev } = require('./variables')
+// const { isDev } = require('./variables')
 const chalk = require('chalk')
 
 let scopeName = null

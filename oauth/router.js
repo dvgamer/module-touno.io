@@ -22,7 +22,8 @@ module.exports = grant => {
       authorizePath: client.auth
     }
   }
-
+  debuger.scope('[TOUNO.io]')
+  debuger.info(`OAuth2 router ${grant.auth} created.`)
   const oauth2 = require('simple-oauth2').create(credentials)
 
   router.get(`/${grant.name}/accesstoken`, async (req, res) => {
