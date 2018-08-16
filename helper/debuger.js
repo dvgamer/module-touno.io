@@ -1,5 +1,4 @@
 const consola = require('consola')
-const { Audit, Notification } = require('../db-touno')
 const chalk = require('chalk')
 
 let scopeName = null
@@ -36,6 +35,7 @@ module.exports = {
     }
   },
   async audit (message, timeline, badge, tag) {
+    const { Audit } = require('../db-touno')
     let log = new Audit({
       created: new Date(),
       message: message,
@@ -48,6 +48,7 @@ module.exports = {
     con.info(`Server log '${message}' saved.`)
   },
   async LINE (message, schedule = null) {
+    const { Notification } = require('../db-touno')
     let log = new Notification({
       endpoint: 'line',
       message: message,
