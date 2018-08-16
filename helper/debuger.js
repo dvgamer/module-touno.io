@@ -50,7 +50,7 @@ module.exports = {
   async LINE (message, schedule = null) {
     const { Notification } = require('../db-touno')
     let log = new Notification({
-      endpoint: 'line',
+      endpoint: 'Touno',
       message: message,
       notify: false,
       schedule: schedule,
