@@ -1,7 +1,7 @@
 const api = require('@line/bot-sdk')
 const request = require('request-promise')
 
-const apiMinerLine = process.env.LINE_MINER_API
+const apiErrorLine = process.env.LINE_ERROR_API
 const apiTounoLine = process.env.LINE_TOUNO_API
 const apiDevopsLine = process.env.LINE_DEVOPS_API
 const apiLineID = process.env.LINE_ID
@@ -46,7 +46,7 @@ module.exports = {
   LINE: {
     DevOps: msg => client(apiDevopsLine, typeof msg === 'string' ? { type: 'text', text: msg } : msg),
     Touno: msg => client(apiTounoLine, typeof msg === 'string' ? { type: 'text', text: msg } : msg),
-    Miner: msg => client(apiMinerLine, typeof msg === 'string' ? { type: 'text', text: msg } : msg)
+    Error: msg => client(apiErrorLine, typeof msg === 'string' ? { type: 'text', text: msg } : msg)
   },
   Slack: {
     Notify: (msg, channel, name) => webhook(`${slackEndPoint}${nameNotify}`, name, msg, channel),
