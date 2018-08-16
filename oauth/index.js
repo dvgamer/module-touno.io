@@ -1,8 +1,7 @@
 const { OAuth } = require('../db-touno')
-const { isDev } = require('../helper/variables')
 const debuger = require('../helper/debuger')
 
-const APIENDPOINT = process.env.API_ENDPOINT
+const APIENDPOINT = process.env.API_ENDPOINT || `https://touno.io`
 
 module.exports = {
   AccessToken: async auth => {
@@ -10,11 +9,7 @@ module.exports = {
     if (!item) {
       return { error: 'not oauth type, Please validate auth.', uri: `https://touno.io/auth/${auth}` }
     } else {
-      let host = !isDev ? APIENDPOINT : `https://touno.io`
-
-      debuger.log(`${host}/auth/${auth}/accesstoken`)
-
-      item = await OAuth.findOne({ name: auth })
+      debuger.log(`${APIENDPOINT}/auth/${auth}/accesstoken`)
       return item.token
     }
   }
