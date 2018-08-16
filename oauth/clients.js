@@ -39,7 +39,7 @@ module.exports = {
     type: 'code',
     id: process.env.COINS_ID,
     secret: process.env.COINS_SECRET,
-    scope: 'buyorder+sellorder+history',
+    scope: 'history+wallet_history+wallet_transfer+user_identity',
     host: 'https://coins.ph',
     auth: '/user/api/authorize',
     token: '/user/oauthtoken'
