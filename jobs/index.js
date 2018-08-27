@@ -28,18 +28,6 @@ module.exports = {
           })
         }
       }
-    } else if (opt.tick instanceof Function) {
-      tick = () => {
-        if (corn.IsStoped) {
-          corn.IsStoped = false
-          try {
-            opt.tick()
-          } catch (ex) {
-            debuger.error(ex)
-          }
-          corn.IsStoped = true
-        }
-      }
     } else {
       throw new Error('corntab not tick function or promise.')
     }
