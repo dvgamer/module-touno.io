@@ -15,7 +15,7 @@ module.exports = {
       OnJob: null
     }
 
-    if (opt.tick instanceof Promise) {
+    if (opt.tick instanceof Function) {
       tick = () => {
         if (corn.IsStoped) {
           corn.IsStoped = false
