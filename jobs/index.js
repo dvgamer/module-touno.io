@@ -7,7 +7,7 @@ let core = []
 module.exports = {
   corntab: opt => {
     debuger.scope('CronJob')
-    let tick = null
+    let TickEvent = null
     let corn = {
       ID: 'ID_INDENNITY',
       SetStart: true,
@@ -16,14 +16,17 @@ module.exports = {
     }
 
     if (opt.tick instanceof Function) {
-      tick = () => {
+      TickEvent = () => {
         if (corn.IsStoped) {
+          debuger.start(`Job ID: '${corn.ID}' started.`)
           corn.IsStoped = false
           opt.tick().then(() => {
             corn.IsStoped = true
+            debuger.success(`Job ID: '${corn.ID}' successful.`)
           }).catch(ex => {
             corn.IsStoped = true
             debuger.scope('CronJob')
+            debuger.error(`Job ID: '${corn.ID}' error.`)
             debuger.error(ex)
           })
         }
@@ -31,12 +34,12 @@ module.exports = {
     } else {
       throw new Error('corntab not tick function or promise.')
     }
-    if (opt.init) tick()
+    if (opt.init) TickEvent()
     let cronTime = parser.parseExpression(opt.time)
-    debuger.start(`Job ID: '${corn.ID}' is next at ${cronTime.next().toString()}`)
+    debuger.info(`Job ID: '${corn.ID}' is next at ${cronTime.next().toString()}`)
     corn.OnJob = new cron.CronJob({
       cronTime: opt.time,
-      onTick: tick,
+      onTick: TickEvent,
       start: corn.SetStart,
       timeZone: 'Asia/Bangkok'
     })
