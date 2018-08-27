@@ -10,8 +10,8 @@ module.exports = {
     let tick = null
     let corn = {
       ID: 'ID_INDENNITY',
-      IsStart: true,
-      IsStoped: false,
+      SetStart: true,
+      IsStoped: true,
       OnJob: null
     }
 
@@ -49,7 +49,7 @@ module.exports = {
     corn.OnJob = new cron.CronJob({
       cronTime: opt.time,
       onTick: tick,
-      start: corn.IsStart,
+      start: corn.SetStart,
       timeZone: 'Asia/Bangkok'
     })
     core.push(corn)
