@@ -9,7 +9,7 @@ module.exports = {
       start: true,
       timeZone: 'Asia/Bangkok'
     })
-    jobs.add({
+    jobs.push({
       id: 'ID_INDENNITY',
       corntab: new cron.CronJob(corn)
     })
