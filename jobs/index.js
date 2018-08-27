@@ -1,17 +1,57 @@
 const cron = require('cron')
+const { debuger } = require('touno.io')
+const parser = require('cron-parser')
 
-let jobs = []
+let core = []
 
 module.exports = {
-  corntab: options => {
-    let corn = Object.assign({
-      onTick: () => {},
-      start: true,
+  corntab: opt => {
+    debuger.scope('CronJob')
+    let tick = null
+    let corn = {
+      ID: 'ID_INDENNITY',
+      IsStart: true,
+      IsStoped: false,
+      OnJob: null
+    }
+
+    if (opt.tick instanceof Promise) {
+      tick = () => {
+        if (corn.IsStoped) {
+          corn.IsStoped = false
+          opt.tick().then(() => {
+            corn.IsStoped = true
+          }).catch(ex => {
+            corn.IsStoped = true
+            debuger.scope('CronJob')
+            debuger.error(ex)
+          })
+        }
+      }
+    } else if (opt.tick instanceof Function) {
+      tick = () => {
+        if (corn.IsStoped) {
+          corn.IsStoped = false
+          try {
+            opt.tick()
+          } catch (ex) {
+            debuger.error(ex)
+          }
+          corn.IsStoped = true
+        }
+      }
+    } else {
+      throw new Error('corntab not tick function or promise.')
+    }
+    if (opt.init) tick()
+    let cronTime = parser.parseExpression(opt.time)
+    debuger.start(`Job ID: '${corn.ID}' is next at ${cronTime.next().toString()}`)
+    corn.OnJob = new cron.CronJob({
+      cronTime: opt.time,
+      onTick: tick,
+      start: corn.IsStart,
       timeZone: 'Asia/Bangkok'
-    }, options)
-    jobs.push({
-      id: 'ID_INDENNITY',
-      corntab: new cron.CronJob(corn)
     })
+    core.push(corn)
   }
 }
