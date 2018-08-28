@@ -20,13 +20,20 @@ let report = {
 module.exports = {
   warning: report.warning,
   error: report.error,
-  async Tracking (asyncCallback) {
-    if (!(asyncCallback instanceof Function)) throw new Error('Tracking not Promise.')
-    try {
-      await asyncCallback()
-    } catch (ex) {
-      report.error(ex)
+  async Tracking (OnAsyncCallback, OnExitProcess) {
+    if (OnExitProcess instanceof Function) {
+      let abortProcess = async () => {
+        try { await OnExitProcess() } catch (ex) { report.error(ex) }
+        process.exit(0)
+      }
+
+      process.on('SIGINT', abortProcess)
+      process.on('SIGUSR1', abortProcess)
+      process.on('SIGUSR2', abortProcess)
+      process.on('uncaughtException', abortProcess)
     }
+    if (!(OnAsyncCallback instanceof Function)) throw new Error('Tracking not Promise.')
+    try { await OnAsyncCallback() } catch (ex) { report.error(ex) }
   },
   install (data) {
     config = data
