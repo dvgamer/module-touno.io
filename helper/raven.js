@@ -20,29 +20,26 @@ let report = {
 module.exports = {
   warning: report.warning,
   error: report.error,
-  async Tracking (OnAsyncCallback, OnExitProcess) {
-    if (OnExitProcess instanceof Function) {
-      let abortProcess = async () => {
-        try { await OnExitProcess() } catch (ex) { report.error(ex) }
-        process.exit(0)
-      }
-
-      process.on('SIGINT', abortProcess)
-      process.on('SIGUSR1', abortProcess)
-      process.on('SIGUSR2', abortProcess)
-      process.on('uncaughtException', abortProcess)
-    }
+  async Tracking (OnAsyncCallback) {
     if (!(OnAsyncCallback instanceof Function)) throw new Error('Tracking not Promise.')
     try { await OnAsyncCallback() } catch (ex) { report.error(ex) }
   },
-  install (data) {
+  ProcessClosed (OnExitProcess) {
+    let abortProcess = async () => {
+      try { await OnExitProcess() } catch (ex) { report.error(ex) }
+      process.exit(0)
+    }
+    process.on('SIGINT', abortProcess)
+  },
+  install (data, tag) {
     config = data
     if (!data) throw new Error('Raven not set configuration.')
     if (!isDev) {
       // RAVEN_CONFIG=https://bf6e4ca97c6f45b29017c7cd0a7626fd@sentry.io/1204359
       if (!process.env.RAVEN_CONFIG) throw new Error('`RAVEN_CONFIG` ')
     }
-    Raven.config(!isDev && process.env.RAVEN_CONFIG).install((err, initialErr, eventId) => {
+    Raven.setContext({ tags: tag })
+    Raven.config(!isDev && process.env.RAVEN_CONFIG).install((err, initialErr) => {
       report.error(err || initialErr)
       process.exit(1)
     })
