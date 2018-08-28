@@ -1,22 +1,27 @@
 const Raven = require('raven')
-const debuger = require('./debuger')
 const { isDev } = require('./variables')
 
 let config = null
-module.exports = {
-  Tracking (asyncCallback) {
-    if (!(asyncCallback instanceof Promise)) throw new Error('Tracking not Promise.')
-    asyncCallback().catch(ex => {
-      debuger.error(ex)
-    })
-  },
+let report = {
   warning (ex) {
-    Raven.captureMessage(ex instanceof Error ? ex.message : ex, {
+    Raven.captureMessage(ex instanceof Error ? ex : new Error(ex), {
       level: 'warning' // one of 'info', 'warning', or 'error'
     })
   },
   error (ex) {
     Raven.captureException(ex instanceof Error ? ex : new Error(ex), config)
+  }
+}
+module.exports = {
+  warning: report.warning,
+  error: report.error,
+  async Tracking (asyncCallback) {
+    if (!(asyncCallback instanceof Function)) throw new Error('Tracking not Promise.')
+    try {
+      await asyncCallback()
+    } catch (ex) {
+      report.error(ex)
+    }
   },
   install (data) {
     config = data
@@ -26,8 +31,8 @@ module.exports = {
       if (!process.env.RAVEN_CONFIG) throw new Error('`RAVEN_CONFIG` ')
     }
     Raven.config(!isDev && process.env.RAVEN_CONFIG).install((err, initialErr, eventId) => {
-      debuger.error(err || initialErr)
-      if (isDev) process.exit(1)
+      report.error(err || initialErr)
+      process.exit(1)
     })
   }
 }

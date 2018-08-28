@@ -1,5 +1,7 @@
 const consola = require('consola')
 const chalk = require('chalk')
+const Raven = require('./variables/raven')
+const { isDev } = require('./variables')
 
 let scopeName = null
 let logger = consola
@@ -9,7 +11,7 @@ module.exports = {
     logger = name ? consola.withScope(scopeName) : logger = consola
   },
   log (...msg) {
-    // if (!isDev) return
+    if (!isDev) return
     console.log(chalk.gray('- debug'), `${scopeName ? `${scopeName} ${chalk.blue('»')}` : ''}`, ...msg)
   },
   start (...msg) {
@@ -24,17 +26,23 @@ module.exports = {
     // if (!isDev) return
     logger.info(msg.join(' '))
   },
-  async error (error) {
+  error (error) {
     if (!error) return
     if (error instanceof Error) {
-      const Youch = require('youch')
-      let output = await new Youch(error, {}).toJSON()
-      console.log(require('youch-terminal')(output))
+      if (isDev) {
+        const Youch = require('youch')
+        new Youch(error, {}).toJSON().then((output) => {
+          console.log(require('youch-terminal')(output))
+        })
+      } else {
+        logger.error(`DEBUGER Tracking::${error.message}`)
+        Raven.error(error)
+      }
     } else {
       logger.error(error.message)
     }
   },
-  async audit (message, timeline, badge, tag) {
+  audit: (message, timeline, badge, tag) => Raven.Tracking(async () => {
     const { Audit } = require('../db-touno')
     let log = new Audit({
       created: new Date(),
@@ -45,9 +53,9 @@ module.exports = {
     })
     await log.save()
     let con = consola.withScope('Audit')
-    con.info(`Server log '${message}' saved.`)
-  },
-  async LINE (message, schedule = null) {
+    con.info(`Server audit log '${message.length}' characters saved.`)
+  }),
+  LINE: (message, schedule = null) => Raven.Tracking(async () => {
     const { Notification } = require('../db-touno')
     let log = new Notification({
       endpoint: 'Touno',
@@ -58,17 +66,6 @@ module.exports = {
     })
     await log.save()
     let con = consola.withScope('Notify')
-    con.info(`Server notify '${message}' saved.`)
-  },
-  progress: {
-    begin (msg) {
-
-    },
-    end (msg) {
-
-    },
-    set (min, max) {
-
-    }
-  }
+    con.info(`Server notify message ${message.length} characters saved.`)
+  })
 }
