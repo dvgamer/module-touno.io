@@ -6,13 +6,13 @@ let config = null
 let logger = consola.withScope('Raven')
 let report = {
   warning (ex) {
-    logger.warning(`Raven::${ex instanceof Error ? ex.message : ex}`)
+    logger.warning(ex)
     Raven.captureMessage(ex instanceof Error ? ex : new Error(ex), {
       level: 'warning' // one of 'info', 'warning', or 'error'
     })
   },
   error (ex) {
-    logger.error(`Raven::${ex instanceof Error ? ex.message : ex}`)
+    logger.error(ex)
     Raven.captureException(ex instanceof Error ? ex : new Error(ex), config)
   }
 }
@@ -35,7 +35,7 @@ module.exports = {
       // RAVEN_CONFIG=https://bf6e4ca97c6f45b29017c7cd0a7626fd@sentry.io/1204359
       if (!process.env.RAVEN_CONFIG) throw new Error('`RAVEN_CONFIG` ')
     }
-    Raven.setContext({ tags: tag })
+    if (tag) Raven.setContext({ tags: tag })
     Raven.config(!isDev && process.env.RAVEN_CONFIG).install((err, initialErr) => {
       report.error(err || initialErr)
       process.exit(1)
