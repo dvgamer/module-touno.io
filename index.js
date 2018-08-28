@@ -8,10 +8,10 @@ const ProcessClose = afterCallBack => {
     process.exit(0)
   }
 
-  process.on('SIGINT', () => abortProcess().catch(Raven))
-  process.on('SIGUSR1', () => abortProcess().catch(Raven))
-  process.on('SIGUSR2', () => abortProcess().catch(Raven))
-  process.on('uncaughtException', () => abortProcess().catch(Raven))
+  process.on('SIGINT', () => Raven.Tracking(abortProcess))
+  process.on('SIGUSR1', () => Raven.Tracking(abortProcess))
+  process.on('SIGUSR2', () => Raven.Tracking(abortProcess))
+  process.on('uncaughtException', () => Raven.Tracking(abortProcess))
 }
 
 module.exports = {

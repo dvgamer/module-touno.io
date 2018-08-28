@@ -1,17 +1,22 @@
 const Raven = require('raven')
+const consola = require('consola')
 const { isDev } = require('./variables')
 
 let config = null
+let logger = consola.withScope('Raven')
 let report = {
   warning (ex) {
+    logger.warning(`Raven::${ex instanceof Error ? ex.message : ex}`)
     Raven.captureMessage(ex instanceof Error ? ex : new Error(ex), {
       level: 'warning' // one of 'info', 'warning', or 'error'
     })
   },
   error (ex) {
+    logger.error(`Raven::${ex instanceof Error ? ex.message : ex}`)
     Raven.captureException(ex instanceof Error ? ex : new Error(ex), config)
   }
 }
+
 module.exports = {
   warning: report.warning,
   error: report.error,

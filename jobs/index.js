@@ -1,15 +1,20 @@
 const cron = require('cron')
-const { debuger } = require('touno.io')
 const parser = require('cron-parser')
+
+const debuger = require('../helper/debuger')
+const Raven = require('../helper/raven')
+// const { TounoConnectionReady, Touno } = require('../db-touno')
 
 let core = []
 
 module.exports = {
-  corntab: opt => {
+  corntab: Raven.Tracking(async opt => {
     debuger.scope('CronJob')
+    // await TounoConnectionReady()
+    // let Schedule = await Touno.findOne({ config: 'aaaa', group: 'config', 'data.ID': '' })
     let TickEvent = null
     let corn = {
-      ID: 'ID_INDENNITY',
+      ID: opt.id || 'UNKNOW_INDENNITY',
       SetStart: true,
       IsStoped: true,
       OnJob: null
@@ -44,5 +49,5 @@ module.exports = {
       timeZone: 'Asia/Bangkok'
     })
     core.push(corn)
-  }
+  })
 }

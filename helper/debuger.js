@@ -1,5 +1,6 @@
 const consola = require('consola')
 const chalk = require('chalk')
+const mongoose = require('mongoose')
 const Raven = require('./variables/raven')
 const Time = require('./variables/time')
 const { isDev } = require('./variables')
@@ -36,7 +37,6 @@ module.exports = {
           console.log(require('youch-terminal')(output))
         })
       } else {
-        logger.error(`DEBUGER Tracking::${error.message}`)
         Raven.error(error)
       }
     } else {
@@ -45,6 +45,7 @@ module.exports = {
   },
   audit: (message, timeline, badge, tag) => Raven.Tracking(async () => {
     let measure = new Time()
+    if (mongoose.connection.readyState !== 1) throw new Error('MongoDB ConnectionOpen() is not used.')
     const { Audit } = require('../db-touno')
     let log = new Audit({
       created: new Date(),
@@ -59,6 +60,7 @@ module.exports = {
   }),
   LINE: (message, schedule = null) => Raven.Tracking(async () => {
     let measure = new Time()
+    if (mongoose.connection.readyState !== 1) throw new Error('MongoDB ConnectionOpen() is not used.')
     const { Notification } = require('../db-touno')
     let log = new Notification({
       endpoint: 'Touno',

@@ -1,4 +1,4 @@
-const { OAuth } = require('../db-touno')
+const { TounoConnectionReady, OAuth } = require('../db-touno')
 const { isDev, randString } = require('../helper/variables')
 const Time = require('../helper/time')
 const debuger = require('../helper/debuger')
@@ -28,6 +28,7 @@ module.exports = grant => {
 
   router.get(`/${grant.name}/accesstoken`, async (req, res) => {
     debuger.scope(`[${grant.auth}]`)
+    await TounoConnectionReady()
     let item = await OAuth.findOne({ name: grant.auth })
     if (!item || !item.token) {
       debuger.log(`authorization error -- Please validate auth`)
@@ -90,6 +91,7 @@ module.exports = grant => {
           redirect_uri: uri
         })
 
+        await TounoConnectionReady()
         let item = await OAuth.findOne({ name: grant.auth })
 
         let commited = {

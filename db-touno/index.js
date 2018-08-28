@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 mongoose.Promise = require('q').Promise
 
 const debuger = require('../helper/debuger')
-
+let mongoConnected = false
 let mongodb = {
   TounoOpen: async options => {
     debuger.scope('MongoDB')
@@ -12,11 +12,17 @@ let mongodb = {
 
     debuger.log(`Connection is '${TOUNODB_URI}'.`)
     await mongoose.connect(TOUNODB_URI, Object.assign({ useNewUrlParser: true }, options || {}))
+    mongoConnected = true
     debuger.log(`Connected. (State is ${mongoose.connection.readyState})`)
   },
-  tests: mongoose.model('db-tests', mongoose.Schema({ any: mongoose.Schema.Types.Mixed }), 'db-tests'),
+  TounoConnectionReady: async () => {
+    if (mongoose.connection.readyState !== 1 || !mongoConnected) throw new Error('MongoDB ConnectionOpen() is not used.')
+    return true
+  },
+  TounoTest: mongoose.model('dev-tests', mongoose.Schema({ any: mongoose.Schema.Types.Mixed }), 'dev-tests'),
   TounoClose: async () => {
     await mongoose.connection.close()
+    mongoConnected = false
     debuger.scope('MongoDB')
     debuger.log(`Closed. (State is ${mongoose.connection.readyState})`)
   }
