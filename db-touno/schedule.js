@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 module.exports = [
   {
     id: 'ScheduleNote',
-    name: 'db-schedule',
+    name: 'db-schedule-note',
     schema: mongoose.Schema({
       title: String,
       desc: String,
