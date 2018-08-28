@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 module.exports = [
   {
-    id: 'Schedule',
+    id: 'ScheduleNote',
     name: 'db-schedule',
     schema: mongoose.Schema({
       title: String,
@@ -14,11 +14,11 @@ module.exports = [
     })
   },
   {
-    id: 'ScheduleYearly',
-    name: 'db-schedule-yearly',
+    id: 'Schedule',
+    name: 'db-schedule',
     schema: mongoose.Schema({
-      day: Number,
-      month: Number,
+      period: String,
+      every: String,
       title: String,
       holiday: Boolean,
       notify: Boolean
