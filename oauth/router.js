@@ -55,8 +55,8 @@ module.exports = grant => {
       debuger.log(`authorization step-5 -- refreshToken (${elapsed.nanoseconds()})`)
       debuger.audit(`Authorization ${grant.auth} refresh token completed.`, 'success')
       res.end()
-    } catch (error) {
-      debuger.error(`authorization error -- refreshing token ${error.message}`)
+    } catch (ex) {
+      debuger.error(`authorization error -- refreshing token`)
       debuger.error(ex)
       res.statusCode(500)
     }
@@ -110,7 +110,7 @@ module.exports = grant => {
         debuger.audit(`Authorization ${grant.auth} access token completed.`, 'success')
         debuger.log(`authorization step-3 -- accessToken ${!item ? 'created' : 'updated'} (${elapsed.nanoseconds()})`)
       } catch (ex) {
-        debuger.log(`authorization step-error -- getToken fail (${ex.message})`)
+        debuger.log(`authorization step-error -- getToken fail`)
         debuger.error(ex)
       }
 

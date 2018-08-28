@@ -24,9 +24,11 @@ module.exports = {
     if (!(OnAsyncCallback instanceof Function)) throw new Error('Tracking not Promise.')
     try { await OnAsyncCallback() } catch (ex) { report.error(ex) }
   },
-  async ProcessClosed (OnExitProcess) {
-    if (!(OnExitProcess instanceof Function)) throw new Error('OnExitProcess not Promise.')
-    try { await OnExitProcess() } catch (ex) { report.error(ex) }
+  ProcessClosed (OnExitProcess) {
+    return async () => {
+      if (!(OnExitProcess instanceof Function)) throw new Error('OnExitProcess not Promise.')
+      try { await OnExitProcess() } catch (ex) { report.error(ex) }
+    }
   },
   install (data, tag) {
     config = data
