@@ -29,7 +29,12 @@ module.exports = {
       try { await OnExitProcess() } catch (ex) { report.error(ex) }
       process.exit(0)
     }
-    process.on('SIGINT', abortProcess)
+    process.on('SIGINT', () => abortProcess().then(() => {
+      if (isDev) logger.log(`Raven::ProcessOnExitSuccess`)
+    }).catch(ex => {
+      if (isDev) logger.log(`Raven::ProcessOnExitFail`)
+      logger.error(ex.message)
+    }))
   },
   install (data, tag) {
     config = data
