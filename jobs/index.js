@@ -8,7 +8,7 @@ const Raven = require('../helper/raven')
 let core = []
 
 module.exports = {
-  CornTab: Raven.Tracking(async opt => {
+  CornTab: opt => Raven.Tracking(async () => {
     // await TounoConnectionReady()
     // let Schedule = await Touno.findOne({ config: 'aaaa', group: 'config', 'data.ID': '' })
     let TickEvent = null
