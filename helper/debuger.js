@@ -1,8 +1,8 @@
 const consola = require('consola')
 const chalk = require('chalk')
 const mongoose = require('mongoose')
-const Raven = require('./variables/raven')
-const Time = require('./variables/time')
+const Raven = require('./raven')
+const Time = require('./time')
 const { isDev } = require('./variables')
 
 let scopeName = null
@@ -17,15 +17,12 @@ module.exports = {
     console.log(chalk.gray('- debug'), `${scopeName ? `${scopeName} ${chalk.blue('»')}` : ''}`, ...msg)
   },
   start (...msg) {
-    // if (!isDev) return
     logger.start(msg.join(' '))
   },
   success (...msg) {
-    // if (!isDev) return
     logger.success(msg.join(' '))
   },
   info (...msg) {
-    // if (!isDev) return
     logger.info(msg.join(' '))
   },
   error (error) {

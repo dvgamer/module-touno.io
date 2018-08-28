@@ -22,16 +22,16 @@ module.exports = grant => {
       authorizePath: client.auth
     }
   }
-  debuger.scope('[TOUNO.io]')
+  debuger.scope('TOUNO.io')
   debuger.info(`OAuth2 router ${grant.auth} created.`)
   const oauth2 = require('simple-oauth2').create(credentials)
 
   router.get(`/${grant.name}/accesstoken`, async (req, res) => {
-    debuger.scope(`[${grant.auth}]`)
+    debuger.scope(grant.auth)
     await TounoConnectionReady()
     let item = await OAuth.findOne({ name: grant.auth })
     if (!item || !item.token) {
-      debuger.log(`authorization error -- Please validate auth`)
+      debuger.error(`authorization error -- Please validate auth`)
       res.statusCode(500)
       return
     }
@@ -56,15 +56,15 @@ module.exports = grant => {
       debuger.audit(`Authorization ${grant.auth} refresh token completed.`, 'success')
       res.end()
     } catch (error) {
-      debuger.audit(`Authorization ${grant.auth} refresh token fail.`, 'error')
-      debuger.log(`authorization error -- refreshing token ${error.message}`)
+      debuger.error(`authorization error -- refreshing token ${error.message}`)
+      debuger.error(ex)
       res.statusCode(500)
     }
   })
 
   router.get(`/${grant.name}`, async (req, res) => {
     let { query, baseUrl } = req
-    debuger.scope(`[${grant.auth}]`)
+    debuger.scope(grant.auth)
 
     const uri = `${host}${baseUrl}/${grant.name}`
     const state = `${client.state ? `${client.state}_` : 'api-'}${randString(8)}`
@@ -110,7 +110,6 @@ module.exports = grant => {
         debuger.audit(`Authorization ${grant.auth} access token completed.`, 'success')
         debuger.log(`authorization step-3 -- accessToken ${!item ? 'created' : 'updated'} (${elapsed.nanoseconds()})`)
       } catch (ex) {
-        debuger.audit(`Authorization ${grant.auth} access token fail.`, 'error')
         debuger.log(`authorization step-error -- getToken fail (${ex.message})`)
         debuger.error(ex)
       }

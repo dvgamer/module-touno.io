@@ -9,7 +9,6 @@ let core = []
 
 module.exports = {
   corntab: Raven.Tracking(async opt => {
-    debuger.scope('CronJob')
     // await TounoConnectionReady()
     // let Schedule = await Touno.findOne({ config: 'aaaa', group: 'config', 'data.ID': '' })
     let TickEvent = null
@@ -23,10 +22,12 @@ module.exports = {
     if (opt.tick instanceof Function) {
       TickEvent = () => {
         if (corn.IsStoped) {
+          debuger.scope('CronJob')
           debuger.start(`Job ID: '${corn.ID}' started.`)
           corn.IsStoped = false
           opt.tick().then(() => {
             corn.IsStoped = true
+            debuger.scope('CronJob')
             debuger.success(`Job ID: '${corn.ID}' successful.`)
           }).catch(ex => {
             corn.IsStoped = true
@@ -41,6 +42,7 @@ module.exports = {
     }
     if (opt.init) TickEvent()
     let cronTime = parser.parseExpression(opt.time)
+    debuger.scope('CronJob')
     debuger.info(`Job ID: '${corn.ID}' is next at ${cronTime.next().toString()}`)
     corn.OnJob = new cron.CronJob({
       cronTime: opt.time,
