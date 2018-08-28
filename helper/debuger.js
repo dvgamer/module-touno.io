@@ -1,6 +1,7 @@
 const consola = require('consola')
 const chalk = require('chalk')
 const Raven = require('./variables/raven')
+const Time = require('./variables/time')
 const { isDev } = require('./variables')
 
 let scopeName = null
@@ -43,6 +44,7 @@ module.exports = {
     }
   },
   audit: (message, timeline, badge, tag) => Raven.Tracking(async () => {
+    let measure = new Time()
     const { Audit } = require('../db-touno')
     let log = new Audit({
       created: new Date(),
@@ -53,9 +55,10 @@ module.exports = {
     })
     await log.save()
     let con = consola.withScope('Audit')
-    con.info(`Server audit log '${message.length}' characters saved.`)
+    con.info(`Server audit log '${message.length}' characters saved. (${measure.nanoseconds()})`)
   }),
   LINE: (message, schedule = null) => Raven.Tracking(async () => {
+    let measure = new Time()
     const { Notification } = require('../db-touno')
     let log = new Notification({
       endpoint: 'Touno',
@@ -66,6 +69,6 @@ module.exports = {
     })
     await log.save()
     let con = consola.withScope('Notify')
-    con.info(`Server notify message ${message.length} characters saved.`)
+    con.info(`Server notify message ${message.length} characters saved. (${measure.nanoseconds()})`)
   })
 }
