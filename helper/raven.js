@@ -24,17 +24,9 @@ module.exports = {
     if (!(OnAsyncCallback instanceof Function)) throw new Error('Tracking not Promise.')
     try { await OnAsyncCallback() } catch (ex) { report.error(ex) }
   },
-  ProcessClosed (OnExitProcess) {
-    let abortProcess = async () => {
-      try { await OnExitProcess() } catch (ex) { report.error(ex) }
-      process.exit(0)
-    }
-    process.on('SIGINT', () => abortProcess().then(() => {
-      if (isDev) logger.log(`Raven::ProcessOnExitSuccess`)
-    }).catch(ex => {
-      if (isDev) logger.log(`Raven::ProcessOnExitFail`)
-      logger.error(ex.message)
-    }))
+  async ProcessClosed (OnExitProcess) {
+    if (!(OnExitProcess instanceof Function)) throw new Error('OnExitProcess not Promise.')
+    try { await OnExitProcess() } catch (ex) { report.error(ex) }
   },
   install (data, tag) {
     config = data
