@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
-const moment = require('moment')
+const moment = require('moment-timezone')
 
 mongoose.Promise = require('q').Promise
-moment.tz(process.env.TZ || 'Asia/Bangkok')
+moment.tz.setDefault(process.env.TZ || 'Asia/Bangkok')
 
 const debuger = require('../helper/debuger')
 
