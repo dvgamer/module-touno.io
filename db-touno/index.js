@@ -2,7 +2,7 @@ const mongoose = require('mongoose')
 const moment = require('moment')
 
 mongoose.Promise = require('q').Promise
-moment.tz.setDefault(process.env.TZ || 'Asia/Bangkok')
+moment.tz(process.env.TZ || 'Asia/Bangkok')
 
 const debuger = require('../helper/debuger')
 
