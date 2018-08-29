@@ -1,6 +1,6 @@
 {
   "name": "touno.io",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "description": "Global data and oauth in all projects.",
   "main": "index.js",
   "scripts": {
@@ -31,7 +31,6 @@
     "chalk": "^2.4.1",
     "consola": "^1.4.3",
     "cron": "^1.4.1",
-    "cron-parser": "^2.6.0",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
     "moment-timezone": "^0.5.21",
