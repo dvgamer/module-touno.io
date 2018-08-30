@@ -1,5 +1,5 @@
 const QuickSort = (aObject = [], sKey = '') => {
-  if (aObject.length <= 1) return
+  if (aObject.length <= 1) return aObject
   let aLeft = []
   let aRight = []
   let oPivot = aObject.pop()
@@ -11,7 +11,7 @@ const QuickSort = (aObject = [], sKey = '') => {
       if (aObject[i][sKey] <= oPivot[sKey]) aLeft.push(aObject[i]); else aRight.push(aObject[i])
     }
   }
-  return ([]).concat(QuickSort(aLeft, sKey), oPivot, QuickSort(aRight, sKey))
+  return [].concat(QuickSort(aLeft, sKey), oPivot, QuickSort(aRight, sKey))
 }
 
 module.exports = {
