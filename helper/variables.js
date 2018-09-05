@@ -6,6 +6,7 @@ let charASCII = t => parseInt(Math.random() * (t === 0 ? 9 : 25))
 
 module.exports = {
   isDev: !(process.env.NODE_ENV === 'production'),
+  isWin: process.platform === 'win32',
   randString: l => {
     l = l || 32
     let result = ''
