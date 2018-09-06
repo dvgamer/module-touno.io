@@ -15,7 +15,7 @@ const groupPadding = (msg, size, pad) => {
 }
 
 const logWindows = (scope, icon, title, color, msg) => {
-  let msg2 = [ color(` ${icon}`) ]
+  let msg2 = [ chalk.gray(moment().format('HH:mm:ss.SSS')), color(icon) ]
   msg2.push(color(groupPadding(title, groupSize, 'padStart')))
   if (scope) {
     msg2.push(groupPadding(scope, scopeSize, 'padEnd'))
@@ -35,7 +35,7 @@ const loggerCreate = scopeName => {
   return {
     log (...msg) {
       if (!isDev) return
-      let msg2 = [ chalk.gray.bold(' …') ]
+      let msg2 = [ chalk.gray(moment().format('YYYY-MM-DD HH:mm:ss')), chalk.gray.bold('…') ]
       msg2.push(measure ? groupPadding(measure.nanoseconds(), groupSize, 'padStart') : chalk.gray.bold(groupPadding('debug', groupSize, 'padStart')))
       if (scopeName) {
         msg2.push(groupPadding(scopeName, scopeSize, 'padEnd'))
@@ -45,15 +45,19 @@ const loggerCreate = scopeName => {
     },
     start (...msg) {
       measure = new Time()
-      if (isWin) logWindows(scopeName, moment().format('HH:mm:ss.SSS'), 'start', chalk.cyan.bold, msg); else logLinux(scopeName, msg)
+      if (isWin) logWindows(scopeName, '○', 'start', chalk.cyan.bold, msg); else logLinux(scopeName, msg)
     },
     success (...msg) {
       if (measure) msg.push(`(${measure.total()})`)
-      if (isWin) logWindows(scopeName, moment().format('HH:mm:ss.SSS'), 'success', chalk.green.bold, msg); else logLinux(scopeName, msg)
+      if (isWin) logWindows(scopeName, '●', 'success', chalk.green.bold, msg); else logLinux(scopeName, msg)
+      measure = null
+    },
+    warning (...msg) {
+      if (isWin) logWindows(scopeName, '▲', 'warning', chalk.yellow.bold, msg); else logLinux(scopeName, msg)
       measure = null
     },
     info (...msg) {
-      if (isWin) logWindows(scopeName, moment().format('HH:mm:ss.SSS'), 'info', chalk.blue.bold, msg); else logLinux(scopeName, msg)
+      if (isWin) logWindows(scopeName, '╍', 'info', chalk.blue.bold, msg); else logLinux(scopeName, msg)
     },
     error (ex) {
       if (!ex) return
@@ -74,7 +78,7 @@ const loggerCreate = scopeName => {
       } else {
         let msg = [ ex.toString() ]
         if (measure) msg.push(`(${measure.total()})`)
-        if (isWin) logWindows(scopeName, moment().format('HH:mm:ss.SSS'), 'error', chalk.red.bold, msg); else logLinux(scopeName, msg)
+        if (isWin) logWindows(scopeName, 'х', 'error', chalk.red.bold, msg); else logLinux(scopeName, msg)
       }
     }
   }
