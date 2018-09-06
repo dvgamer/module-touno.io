@@ -1,24 +1,25 @@
 const chalk = require('chalk')
 const mongoose = require('mongoose')
+const timezone = require('moment-timezone')
 const moment = require('moment')
 const Raven = require('./raven')
 const Time = require('./time')
 const { isDev, isWin } = require('./variables')
 
-moment.tz.setDefault(process.env.TZ || 'Asia/Bangkok')
+timezone.tz.setDefault(process.env.TZ || 'Asia/Bangkok')
 
 const groupSize = 6
 const scopeSize = 8
-const groupPadding = (msg, size) => {
-  return msg.length > size ? msg.substr(0, size) : msg.padStart(size - msg.length, ' ')
+const groupPadding = (msg, size, pad) => {
+  return msg.length > size ? msg.substr(0, size) : msg[pad](size, ' ')
 }
 
 const logWindows = (scope, icon, title, color, msg) => {
-  let msg2 = [ color(` ${icon} `) ]
-  msg2.push(color(groupPadding(title, groupSize)))
+  let msg2 = [ color(` ${icon}`) ]
+  msg2.push(color(groupPadding(title, groupSize, 'padStart')))
   if (scope) {
-    msg2.push(groupPadding(scope, scopeSize))
-    msg2.push(chalk.cray('»'))
+    msg2.push(groupPadding(scope, scopeSize, 'padEnd'))
+    msg2.push(chalk.cyan('»'))
   }
   console.log(...(msg2.concat(msg)))
 }
@@ -34,25 +35,25 @@ const loggerCreate = scopeName => {
   return {
     log (...msg) {
       if (!isDev) return
-      let msg2 = [ chalk.gray.bold(' … ') ]
-      msg2.push(measure ? groupPadding(measure.nanoseconds(), groupSize) : chalk.gray.bold(groupPadding('debug', groupSize)))
+      let msg2 = [ chalk.gray.bold(' …') ]
+      msg2.push(measure ? groupPadding(measure.nanoseconds(), groupSize, 'padStart') : chalk.gray.bold(groupPadding('debug', groupSize, 'padStart')))
       if (scopeName) {
-        msg2.push(groupPadding(scopeName, scopeSize))
-        msg2.push(chalk.cray('»'))
+        msg2.push(groupPadding(scopeName, scopeSize, 'padEnd'))
+        msg2.push(chalk.cyan('»'))
       }
       console.log(...(msg2.concat(msg)))
     },
     start (...msg) {
       measure = new Time()
-      if (isWin) logWindows(scopeName, '○', 'start', chalk.cyan.bold, msg); else logLinux(scopeName, msg)
+      if (isWin) logWindows(scopeName, moment().format('HH:mm:ss.SSS'), 'start', chalk.cyan.bold, msg); else logLinux(scopeName, msg)
     },
     success (...msg) {
       if (measure) msg.push(`(${measure.total()})`)
-      if (isWin) logWindows(scopeName, '●', 'success', chalk.green.bold, msg); else logLinux(scopeName, msg)
+      if (isWin) logWindows(scopeName, moment().format('HH:mm:ss.SSS'), 'success', chalk.green.bold, msg); else logLinux(scopeName, msg)
       measure = null
     },
     info (...msg) {
-      if (isWin) logWindows(scopeName, '▪', 'info', chalk.blue.bold, msg); else logLinux(scopeName, msg)
+      if (isWin) logWindows(scopeName, moment().format('HH:mm:ss.SSS'), 'info', chalk.blue.bold, msg); else logLinux(scopeName, msg)
     },
     error (ex) {
       if (!ex) return
@@ -73,7 +74,7 @@ const loggerCreate = scopeName => {
       } else {
         let msg = [ ex.toString() ]
         if (measure) msg.push(`(${measure.total()})`)
-        if (isWin) logWindows(scopeName, 'х', 'error', chalk.red.bold, msg); else logLinux(scopeName, msg)
+        if (isWin) logWindows(scopeName, moment().format('HH:mm:ss.SSS'), 'error', chalk.red.bold, msg); else logLinux(scopeName, msg)
       }
     }
   }
