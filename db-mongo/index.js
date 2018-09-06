@@ -7,19 +7,22 @@ moment.tz.setDefault(process.env.TZ || 'Asia/Bangkok')
 const debuger = require('../helper/debuger').scope('MongoDB')
 // let mongoConnected = false
 let mongodb = {
-  MongoConnection: async dbname => {
-    const MONGODB_ACCOUNT = process.env.MONGODB_ACCOUNT
-    let MONGODB_URI = `mongodb://${MONGODB_ACCOUNT}@aws.compute-southeast-1.touno.io:6501/${dbname}?authMode=scram-sha1`
+  MongoConnection: async (dbname, account, server) => {
+    const MONGODB_ACCOUNT = account || process.env.MONGODB_ACCOUNT
+    const MONGODB_SERVER = server || process.env.MONGODB_SERVER
+    let MONGODB_URI = `mongodb://${MONGODB_ACCOUNT}@${MONGODB_SERVER}/${dbname}?authMode=scram-sha1`
     let conn = await mongoose.createConnection(MONGODB_URI, {})
-    // mongoConnected = true
 
-    return {
+    let db = {}
+
+    return Object.assign({
+      connected: () => conn.readyState === 1,
       close: async () => {
         await conn.close()
         // mongoConnected = false
         debuger.log(`Closed. (State is ${conn.readyState})`)
       }
-    }
+    }, db)
   }
 }
 
