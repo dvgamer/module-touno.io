@@ -12,6 +12,7 @@ let mongodb = {
     const MONGODB_SERVER = server || process.env.MONGODB_SERVER
     let MONGODB_URI = `mongodb://${MONGODB_ACCOUNT}@${MONGODB_SERVER}/${dbname}?authMode=scram-sha1`
     let conn = await mongoose.createConnection(MONGODB_URI, {})
+    debuger.log(`Created. (State is ${conn.readyState})`)
 
     let db = {}
 

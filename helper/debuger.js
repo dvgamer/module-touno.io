@@ -1,59 +1,87 @@
-const consola = require('consola')
 const chalk = require('chalk')
 const mongoose = require('mongoose')
+const moment = require('moment')
 const Raven = require('./raven')
 const Time = require('./time')
-const { isDev } = require('./variables')
+const { isDev, isWin } = require('./variables')
 
-const grouSize = 6
-const groupPadding = (msg) => {
-  return msg.length > grouSize ? msg.substr(0, grouSize) : msg.padEnd(grouSize - msg.length, ' ')
+moment.tz.setDefault(process.env.TZ || 'Asia/Bangkok')
+
+const groupSize = 6
+const scopeSize = 8
+const groupPadding = (msg, size) => {
+  return msg.length > size ? msg.substr(0, size) : msg.padStart(size - msg.length, ' ')
 }
 
-const loggerCreate = (logger, scopeName) => {
+const logWindows = (scope, icon, title, color, msg) => {
+  let msg2 = [ color(` ${icon} `) ]
+  msg2.push(color(groupPadding(title, groupSize)))
+  if (scope) {
+    msg2.push(groupPadding(scope, scopeSize))
+    msg2.push(chalk.cray('»'))
+  }
+  console.log(...(msg2.concat(msg)))
+}
+
+const logLinux = (scope, msg) => {
+  let msg2 = [ moment().format('YYYY-MM-DD HH:mm:ss') ]
+  if (scope) msg2.push(`[${scope.toUpperCase()}]`)
+  console.log(...(msg2.concat(msg)))
+}
+
+const loggerCreate = scopeName => {
   let measure = null
   return {
     log (...msg) {
       if (!isDev) return
-      let msg2 = [' - ']
-      msg2.push(measure ? groupPadding(measure.nanoseconds()) : chalk.gray(groupPadding('debug')))
-      if (scopeName) msg2.push(scopeName)
-      msg2.push(chalk.cray('»'))
+      let msg2 = [ chalk.gray.bold(' … ') ]
+      msg2.push(measure ? groupPadding(measure.nanoseconds(), groupSize) : chalk.gray.bold(groupPadding('debug', groupSize)))
+      if (scopeName) {
+        msg2.push(groupPadding(scopeName, scopeSize))
+        msg2.push(chalk.cray('»'))
+      }
       console.log(...(msg2.concat(msg)))
     },
     start (...msg) {
       measure = new Time()
-      logger.start(...msg)
+      if (isWin) logWindows(scopeName, '○', 'start', chalk.cyan.bold, msg); else logLinux(scopeName, msg)
     },
     success (...msg) {
       if (measure) msg.push(`(${measure.total()})`)
-      logger.success(...msg)
+      if (isWin) logWindows(scopeName, '●', 'success', chalk.green.bold, msg); else logLinux(scopeName, msg)
       measure = null
     },
     info (...msg) {
-      logger.info(...msg)
+      if (isWin) logWindows(scopeName, '▪', 'info', chalk.blue.bold, msg); else logLinux(scopeName, msg)
     },
-    error (error) {
-      if (!error) return
-      if (error instanceof Error) {
+    error (ex) {
+      if (!ex) return
+      if (ex instanceof Error) {
         if (isDev) {
           const Youch = require('youch')
-          new Youch(error, {}).toJSON().then((output) => {
+          new Youch(ex, {}).toJSON().then((output) => {
             console.log(require('youch-terminal')(output))
           })
         } else {
-          Raven.error(error)
+          if (!isWin) {
+            let excep = /at.*?\((.*?)\)/i.exec(ex.stack) || []
+            logLinux(scopeName, [ ex.message.replace('Error:', 'Error Message:') ])
+            logLinux(scopeName, [ `Error File: ${excep[1] ? excep[1] : 'N/A'}`, ex.message ])
+          }
+          Raven.error(ex)
         }
       } else {
-        logger.error(error, `(${measure.total()})`)
+        let msg = [ ex.toString() ]
+        if (measure) msg.push(`(${measure.total()})`)
+        if (isWin) logWindows(scopeName, 'х', 'error', chalk.red.bold, msg); else logLinux(scopeName, msg)
       }
     }
   }
 }
 
-module.exports = Object.assign(loggerCreate(consola), {
+module.exports = Object.assign(loggerCreate(), {
   scope (name) {
-    return loggerCreate(consola.withScope(name), name)
+    return loggerCreate(name)
   },
   audit: (message, timeline, badge, tag) => Raven.Tracking(async () => {
     let measure = new Time()
@@ -67,8 +95,8 @@ module.exports = Object.assign(loggerCreate(consola), {
       tag: tag || []
     })
     await log.save()
-    let con = consola.withScope('Audit')
-    con.info(`Server audit log '${message.length}' characters saved. (${measure.nanoseconds()})`)
+    let logger = loggerCreate('Audit')
+    logger.info(`Server audit log`, message.length, `characters saved. (${measure.nanoseconds()})`)
   }),
   LINE: (message, schedule = null) => Raven.Tracking(async () => {
     let measure = new Time()
@@ -82,7 +110,7 @@ module.exports = Object.assign(loggerCreate(consola), {
       created: new Date()
     })
     await log.save()
-    let con = consola.withScope('Notify')
-    con.info(`Server notify message ${message.length} characters saved. (${measure.nanoseconds()})`)
+    let con = loggerCreate('Notify')
+    con.info(`Server notify message`, message.length, `characters saved. (${measure.nanoseconds()})`)
   })
 })
