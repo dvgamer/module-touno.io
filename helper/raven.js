@@ -1,5 +1,6 @@
 const Raven = require('raven')
 const { isDev } = require('./variables')
+const logger = require('./debuger/logger')('Raven')
 
 let config = null
 let report = {
@@ -16,12 +17,12 @@ module.exports = {
   error: report.error,
   async Tracking (OnAsyncCallback) {
     if (!(OnAsyncCallback instanceof Function)) throw new Error('Tracking not Promise.')
-    try { await OnAsyncCallback() } catch (ex) { report.error(ex) }
+    try { await OnAsyncCallback() } catch (ex) { logger.error(ex) }
   },
   ProcessClosed (proc, OnExitProcess) {
     proc.on('SIGINT', async () => {
       if (!(OnExitProcess instanceof Function)) throw new Error('OnExitProcess not Promise.')
-      try { await OnExitProcess() } catch (ex) { report.error(ex) }
+      try { await OnExitProcess() } catch (ex) { logger.error(ex) }
     })
   },
   install (data, tag) {
@@ -33,7 +34,7 @@ module.exports = {
     }
     if (tag) Raven.setContext({ tags: tag })
     Raven.config(!isDev && process.env.RAVEN_CONFIG).install((err, initialErr) => {
-      report.error(err || initialErr)
+      logger.error(err || initialErr)
       process.exit(1)
     })
   }

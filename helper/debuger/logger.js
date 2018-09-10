@@ -1,6 +1,5 @@
 const chalk = require('chalk')
 const moment = require('moment')
-const Raven = require('./../raven')
 const Time = require('./../time')
 const { isDev } = require('./../variables')
 
@@ -66,7 +65,7 @@ module.exports = scopeName => {
           let excep = /at.*?\((.*?)\)/i.exec(ex.stack) || []
           logLinux(scopeName, 'х', [ ex.message.indexOf('Error:') === 0 ? ex.message.replace('Error:', 'ERROR-Message:') : `ERROR-Message: ${ex.message}` ])
           logLinux(scopeName, 'х', [ `ERROR-File: ${excep[1] ? excep[1] : 'N/A'}`, ex.message ])
-          Raven.error(ex)
+          require('raven').error(ex)
         }
       } else {
         let msg = [ ex.toString() ]
