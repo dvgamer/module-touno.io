@@ -1,6 +1,6 @@
 {
   "name": "touno.io",
-  "version": "2.2",
+  "version": "2.2.0",
   "description": "Global data and oauth in all projects.",
   "main": "index.js",
   "scripts": {
