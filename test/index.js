@@ -1,19 +1,10 @@
-const consola = require('consola')
+const assert = require('assert')
+const logger = require('mocha-logger')
 
-const debuger = require('./helper/debuger.js')
-const Touno = require('../index.js')
+const helper = require('./helper')
 
-consola.info(`Complie ${Object.keys(Touno).length} objects.`)
-
-consola.withScope('UnitTest')
-let UnitTest = async () => {
-  consola.info(`./helper/debuger.js Testing... `)
-  await debuger()
-}
-
-consola.start(`Unit Testing...`)
-UnitTest().then(() => {
-  consola.success(`UnitTest Completed.`)
-}).catch(ex => {
-  consola.error(ex)
+describe('touno.io', () => {
+  it('require module', () => {
+    const Touno = require('../index.js')
+  })
 })

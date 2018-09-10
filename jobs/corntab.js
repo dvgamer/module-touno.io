@@ -1,7 +1,7 @@
 const cron = require('cron')
 const moment = require('moment')
 
-const debuger = require('../helper/debuger')
+const logger = require('../helper/debuger/logger')('CronJob')
 const Raven = require('../helper/raven')
 const { TounoConnectionReady, Touno } = require('../db-touno')
 
@@ -14,7 +14,7 @@ let RefreshCornTab = async (frequency) => {
       await Touno.updateOne({ _id: schedule._id }, { $set: { 'data.reload': false, 'data.started': false } })
       OnJob.stop()
       OnJob.setTime(new cron.CronTime(schedule.data.time))
-      debuger.info(`Job ID: '${ID}' Restarted is next at ${moment(OnJob.nextDates()).format('DD MMMM YYYY HH:mm:ss')}`)
+      logger.info(`Job ID: '${ID}' Restarted is next at ${moment(OnJob.nextDates()).format('DD MMMM YYYY HH:mm:ss')}`)
       await Touno.updateOne({ _id: schedule._id }, { $set: { 'data.started': true } })
       OnJob.start()
     }
@@ -39,18 +39,15 @@ module.exports = opt => Raven.Tracking(async () => {
   if (opt.tick instanceof Function) {
     TickEvent = OnJob => {
       if (corn.IsStoped) {
-        debuger.scope('CronJob')
-        debuger.start(`Job ID: '${corn.ID}' started.`)
+        logger.start(`Job ID: '${corn.ID}' started.`)
         corn.IsStoped = false
         opt.tick().then(() => {
           corn.IsStoped = true
-          debuger.scope('CronJob')
-          debuger.success(`Job ID: '${corn.ID}' successful and next at ${moment(OnJob.nextDates()).format('DD MMMM YYYY HH:mm:ss')}.`)
+          logger.success(`Job ID: '${corn.ID}' successful and next at ${moment(OnJob.nextDates()).format('DD MMMM YYYY HH:mm:ss')}.`)
         }).catch(ex => {
           corn.IsStoped = true
-          debuger.scope('CronJob')
-          debuger.error(`Job ID: '${corn.ID}' error.`)
-          debuger.error(ex)
+          logger.error(`Job ID: '${corn.ID}' error.`)
+          logger.error(ex)
         })
       }
     }
@@ -63,8 +60,7 @@ module.exports = opt => Raven.Tracking(async () => {
     start: true,
     timeZone: 'Asia/Bangkok'
   })
-  debuger.scope('CronJob')
-  debuger.info(`Job ID: '${corn.ID}' is next at ${moment(corn.OnJob.nextDates()).format('DD MMMM YYYY HH:mm:ss')}`)
+  logger.info(`Job ID: '${corn.ID}' is next at ${moment(corn.OnJob.nextDates()).format('DD MMMM YYYY HH:mm:ss')}`)
 
   if (corn.data.initial) corn.OnJob.fireOnTick()
   await Touno.updateOne({ _id: schedule._id }, { $set: { 'data.started': true, 'data.reload': false } })

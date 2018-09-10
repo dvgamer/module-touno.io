@@ -1,18 +1,12 @@
 const Raven = require('raven')
-const consola = require('consola')
 const { isDev } = require('./variables')
 
 let config = null
-let logger = consola.withScope('Raven')
 let report = {
   warning (ex) {
-    logger.warning(ex)
-    Raven.captureMessage(ex instanceof Error ? ex : new Error(ex), {
-      level: 'warning' // one of 'info', 'warning', or 'error'
-    })
+    Raven.captureMessage(ex instanceof Error ? ex : new Error(ex), { level: 'warning' })
   },
   error (ex) {
-    logger.error(ex)
     Raven.captureException(ex instanceof Error ? ex : new Error(ex), config)
   }
 }
@@ -24,11 +18,11 @@ module.exports = {
     if (!(OnAsyncCallback instanceof Function)) throw new Error('Tracking not Promise.')
     try { await OnAsyncCallback() } catch (ex) { report.error(ex) }
   },
-  ProcessClosed (OnExitProcess) {
-    return async () => {
+  ProcessClosed (proc, OnExitProcess) {
+    proc.on('SIGINT', async () => {
       if (!(OnExitProcess instanceof Function)) throw new Error('OnExitProcess not Promise.')
       try { await OnExitProcess() } catch (ex) { report.error(ex) }
-    }
+    })
   },
   install (data, tag) {
     config = data
