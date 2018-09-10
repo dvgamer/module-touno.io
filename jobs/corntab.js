@@ -3,7 +3,8 @@ const moment = require('moment')
 
 const logger = require('../helper/debuger/logger')('CronJob')
 const Raven = require('../helper/raven')
-const { TounoConnectionReady, Touno } = require('../db-touno')
+const db = require('../db-touno')
+const { Touno } = require('../db-touno')
 
 let core = []
 let RefreshCornTab = async (frequency) => {
@@ -23,7 +24,7 @@ let RefreshCornTab = async (frequency) => {
 }
 
 module.exports = opt => Raven.Tracking(async () => {
-  await TounoConnectionReady()
+  await db.connected()
   let schedule = await Touno.findOne({ group: 'corntab', item: opt.id })
 
   if (!opt.id || !schedule) throw new Error('CornTab ID not found.')
