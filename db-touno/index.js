@@ -1,6 +1,6 @@
 const { MongoConnection } = require('../db-mongo')
 
-const logger = require('../helper/debuger')('TounoDB')
+const logger = require('../helper/debuger/logger')('TounoDB')
 
 module.exports = {
   TounoOpen: async () => {
