@@ -1,8 +1,9 @@
 const loggerCreate = require('./logger')
-const mongoose = require('mongoose')
 const timezone = require('moment-timezone')
+const db = require('../../db-touno')
 const Raven = require('./../raven')
 const Time = require('./../time')
+const { isDev } = require('./../variable')
 
 timezone.tz.setDefault(process.env.TZ || 'Asia/Bangkok')
 
@@ -12,12 +13,12 @@ module.exports = Object.assign(loggerCreate(), {
   },
   audit: (message, timeline, badge, tag) => Raven.Tracking(async () => {
     let measure = new Time()
-    if (mongoose.connection.readyState !== 1) throw new Error('MongoDB ConnectionOpen() is not used.')
-    const { Audit } = require('../db-touno')
+    if (!db.connected()) throw new Error('MongoDB ConnectionOpen() is not used.')
+    let { Audit } = await db.open()
     let log = new Audit({
       created: new Date(),
       message: message,
-      timeline: timeline || null,
+      timeline: (isDev ? 'test' : timeline) || null,
       badge: badge || null,
       tag: tag || []
     })
@@ -27,12 +28,12 @@ module.exports = Object.assign(loggerCreate(), {
   }),
   LINE: (message, schedule = null) => Raven.Tracking(async () => {
     let measure = new Time()
-    if (mongoose.connection.readyState !== 1) throw new Error('MongoDB ConnectionOpen() is not used.')
-    const { Notification } = require('../db-touno')
+    if (!db.connected()) throw new Error('MongoDB ConnectionOpen() is not used.')
+    let { Notification } = await db.open()
     let log = new Notification({
       endpoint: 'Touno',
       message: message,
-      notify: false,
+      notify: isDev,
       schedule: schedule,
       created: new Date()
     })

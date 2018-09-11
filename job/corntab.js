@@ -3,29 +3,28 @@ const moment = require('moment')
 
 const logger = require('../helper/debuger/logger')('CronJob')
 const Raven = require('../helper/raven')
-const db = require('../db-touno')
-const { Touno } = require('../db-touno')
+const conn = require('../db-touno')
 
 let core = []
-let RefreshCornTab = async (frequency) => {
+let RefreshCornTab = async (db, frequency) => {
   for (let i = 0; i < core.length; i++) {
     const { ID, OnJob } = core[i]
-    let schedule = await Touno.findOne({ group: 'corntab', item: ID })
+    let schedule = await db.Touno.findOne({ group: 'corntab', item: ID })
     if (schedule && schedule.data.reload) {
-      await Touno.updateOne({ _id: schedule._id }, { $set: { 'data.reload': false, 'data.started': false } })
+      await db.Touno.updateOne({ _id: schedule._id }, { $set: { 'data.reload': false, 'data.started': false } })
       OnJob.stop()
       OnJob.setTime(new cron.CronTime(schedule.data.time))
       logger.info(`Job ID: '${ID}' Restarted is next at ${moment(OnJob.nextDates()).format('DD MMMM YYYY HH:mm:ss')}`)
-      await Touno.updateOne({ _id: schedule._id }, { $set: { 'data.started': true } })
+      await db.Touno.updateOne({ _id: schedule._id }, { $set: { 'data.started': true } })
       OnJob.start()
     }
   }
-  setTimeout(() => RefreshCornTab(frequency), frequency)
+  setTimeout(() => RefreshCornTab(db, frequency), frequency)
 }
 
 module.exports = opt => Raven.Tracking(async () => {
-  await db.connected()
-  let schedule = await Touno.findOne({ group: 'corntab', item: opt.id })
+  let db = await conn.open()
+  let schedule = await db.Touno.findOne({ group: 'corntab', item: opt.id })
 
   if (!opt.id || !schedule) throw new Error('CornTab ID not found.')
   schedule.data._id = schedule._id
@@ -64,10 +63,10 @@ module.exports = opt => Raven.Tracking(async () => {
   logger.info(`Job ID: '${corn.ID}' is next at ${moment(corn.OnJob.nextDates()).format('DD MMMM YYYY HH:mm:ss')}`)
 
   if (corn.data.initial) corn.OnJob.fireOnTick()
-  await Touno.updateOne({ _id: schedule._id }, { $set: { 'data.started': true, 'data.reload': false } })
+  await db.Touno.updateOne({ _id: schedule._id }, { $set: { 'data.started': true, 'data.reload': false } })
   core.push(corn)
   if (core.length === 1) {
-    let { data } = await Touno.findOne({ group: 'config', item: 'server' })
-    await RefreshCornTab(data['corntab-watch-frequency'])
+    let { data } = await db.Touno.findOne({ group: 'config', item: 'server' })
+    await RefreshCornTab(db, data['corntab-watch-frequency'])
   }
 })

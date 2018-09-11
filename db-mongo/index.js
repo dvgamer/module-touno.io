@@ -12,21 +12,19 @@ let mongodb = {
     let MONGODB_URI = `mongodb://${MONGODB_ACCOUNT ? `${MONGODB_ACCOUNT}@` : ''}${MONGODB_SERVER}/${dbname}?authMode=scram-sha1`
     let conn = await mongoose.createConnection(MONGODB_URI, { useNewUrlParser: true, connectTimeoutMS: 10000 })
     debuger.log(`Connected. mongodb://${MONGODB_SERVER}/${dbname} (State is ${conn.readyState})`)
-
-    return {
+    return Object.assign(conn, {
       connected: () => conn.readyState === 1,
       close: async () => {
         await conn.close()
         debuger.log(`Closed. mongodb://${MONGODB_SERVER}/${dbname} (State is ${conn.readyState})`)
       }
-    }
+    })
   },
   MongoSchemaMapping: (conn, db) => {
     for (let i = 0; i < db.length; i++) {
       if (conn[db[i].id]) throw new Error(`MongoDB schema name is duplicate '${db[i].id}'`)
-      conn[db[i].id] = mongoose.model(db[i].name, db[i].schema, db[i].name)
+      conn[db[i].id] = conn.model(db[i].name, db[i].schema, db[i].name)
     }
-    debuger.log(`Mapping ${db.length} collection schema.`)
   }
 }
 
