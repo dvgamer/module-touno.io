@@ -4,7 +4,7 @@ let conn = {
   connected: () => false
 }
 module.exports = {
-  connected: () => false,
+  connected: () => conn.connected(),
   open: async () => {
     if (!conn.connected()) {
       conn = await MongoConnection('db_touno', process.env.TOUNODB_USR, process.env.TOUNODB_SRV)

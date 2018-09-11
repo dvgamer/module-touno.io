@@ -4,6 +4,7 @@ let conn = {
   connected: () => false
 }
 module.exports = {
+  connected: () => conn.connected(),
   open: async () => {
     if (!conn.connected()) {
       conn = await MongoConnection('db_opensource', process.env.OPENSOURCE_USR, process.env.OPENSOURCE_SRV)
