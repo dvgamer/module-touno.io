@@ -27,9 +27,7 @@
     "fsevents": "*"
   },
   "dependencies": {
-    "@line/bot-sdk": "^6.2.1",
     "chalk": "^2.4.1",
-    "consola": "^1.4.3",
     "cron": "^1.4.1",
     "lodash": "^4.17.10",
     "moment": "^2.22.2",
