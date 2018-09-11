@@ -1,6 +1,5 @@
 const loggerCreate = require('./logger')
 const timezone = require('moment-timezone')
-const db = require('../../db-touno')
 const Raven = require('./../raven')
 const Time = require('./../time')
 const { isDev } = require('./../variable')
@@ -13,6 +12,7 @@ module.exports = Object.assign(loggerCreate(), {
   },
   audit: (message, timeline, badge, tag) => Raven.Tracking(async () => {
     let measure = new Time()
+    const db = require('./../../db-touno')
     if (!db.connected()) throw new Error('MongoDB ConnectionOpen() is not used.')
     let { Audit } = await db.open()
     let log = new Audit({
@@ -28,6 +28,7 @@ module.exports = Object.assign(loggerCreate(), {
   }),
   LINE: (message, schedule = null) => Raven.Tracking(async () => {
     let measure = new Time()
+    const db = require('./../../db-touno')
     if (!db.connected()) throw new Error('MongoDB ConnectionOpen() is not used.')
     let { Notification } = await db.open()
     let log = new Notification({
