@@ -12,13 +12,12 @@ let mongodb = {
     let MONGODB_URI = `mongodb://${MONGODB_ACCOUNT ? `${MONGODB_ACCOUNT}@` : ''}${MONGODB_SERVER}/${dbname}?authMode=scram-sha1`
     let conn = await mongoose.createConnection(MONGODB_URI, { useNewUrlParser: true, connectTimeoutMS: 10000 })
     debuger.log(`Connected. mongodb://${MONGODB_SERVER}/${dbname} (State is ${conn.readyState})`)
-    return Object.assign(conn, {
-      connected: () => conn.readyState === 1,
-      close: async () => {
-        await conn.close()
-        debuger.log(`Closed. mongodb://${MONGODB_SERVER}/${dbname} (State is ${conn.readyState})`)
-      }
-    })
+    conn.connected = () => conn.readyState === 1
+    conn.close = async () => {
+      await conn.close()
+      debuger.log(`Closed. mongodb://${MONGODB_SERVER}/${dbname} (State is ${conn.readyState})`)
+    }
+    return conn
   },
   MongoSchemaMapping: (conn, db) => {
     for (let i = 0; i < db.length; i++) {
