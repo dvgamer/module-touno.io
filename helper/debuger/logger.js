@@ -1,7 +1,7 @@
 const chalk = require('chalk')
 const moment = require('moment')
 const Time = require('./../time')
-const { isDev } = require('./../variables')
+const { isDev } = require('../variable')
 
 const groupSize = 6
 const scopeSize = 8
@@ -65,7 +65,7 @@ module.exports = scopeName => {
           let excep = /at.*?\((.*?)\)/i.exec(ex.stack) || []
           logLinux(scopeName, 'х', [ ex.message.indexOf('Error:') === 0 ? ex.message.replace('Error:', 'ERROR-Message:') : `ERROR-Message: ${ex.message}` ])
           logLinux(scopeName, 'х', [ `ERROR-File: ${excep[1] ? excep[1] : 'N/A'}`, ex.message ])
-          require('raven').error(ex)
+          require('../raven').error(ex)
         }
       } else {
         let msg = [ ex.toString() ]

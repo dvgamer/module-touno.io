@@ -35,11 +35,10 @@ describe('Folder -- helper', () => {
     logger.log(elapsed.total())
     done()
   })
-  it('Functional -- variables', done => {
-    const { isDev, isWin, randString } = require('../../helper/variables')
+  it('Functional -- variable', done => {
+    const { isDev, isWin, randString } = require('../../helper/variable')
     logger.log(`isDev: ${isDev}`)
     logger.log(`isWin: ${isWin}`)
-    logger.log(`randString: ${randString()}`)
     done()
   })
 })

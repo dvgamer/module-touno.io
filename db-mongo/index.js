@@ -20,6 +20,13 @@ let mongodb = {
         debuger.log(`Closed. mongodb://${MONGODB_SERVER}/${dbname} (State is ${conn.readyState})`)
       }
     }
+  },
+  MongoSchemaMapping: (conn, db) => {
+    for (let i = 0; i < db.length; i++) {
+      if (conn[db[i].id]) throw new Error(`MongoDB schema name is duplicate '${db[i].id}'`)
+      conn[db[i].id] = mongoose.model(db[i].name, db[i].schema, db[i].name)
+    }
+    debuger.log(`Mapping ${db.length} collection schema.`)
   }
 }
 

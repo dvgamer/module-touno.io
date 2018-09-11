@@ -1,21 +1,18 @@
-const { MongoConnection } = require('../db-mongo')
+const { MongoConnection, MongoSchemaMapping } = require('../db-mongo')
 
-const logger = require('../helper/debuger/logger')('TounoDB')
-
+let conn = {
+  connected: () => false
+}
 module.exports = {
-  TounoOpen: async () => {
-    let conn = await MongoConnection('db_touno', process.env.TOUNODB_USR, process.env.TOUNODB_SRV)
-    let db = []
-    db = db.concat(require('./app'))
-    db = db.concat(require('./wakatime'))
-    db = db.concat(require('./github'))
-    db = db.concat(require('./schedule'))
-    db = db.concat(require('./exhentai'))
-
-    for (var i = 0; i < db.length; i++) {
-      conn[db[i].id] = conn.model(db[i].name, db[i].schema, db[i].name)
+  connected: () => false,
+  open: async () => {
+    if (!conn.connected()) {
+      conn = await MongoConnection('db_touno', process.env.TOUNODB_USR, process.env.TOUNODB_SRV)
+      MongoSchemaMapping(conn, require('./app'))
+      MongoSchemaMapping(conn, require('./schedule'))
+      MongoSchemaMapping(conn, require('./wakatime'))
+      MongoSchemaMapping(conn, require('./github'))
     }
-    logger.log(`Mapping ${db.length} collection schema.`)
     return conn
   }
 }

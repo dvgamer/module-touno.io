@@ -1,5 +1,5 @@
-const { TounoConnectionReady, OAuth } = require('../db-touno')
-const { isDev, randString } = require('../helper/variables')
+const db = require('../db-touno')
+const { isDev, randString } = require('../helper/variable')
 const Time = require('../helper/time')
 const debuger = require('../helper/debuger')
 
@@ -22,16 +22,15 @@ module.exports = grant => {
       authorizePath: client.auth
     }
   }
-  debuger.scope('TOUNO.io')
-  debuger.info(`OAuth2 router ${grant.auth} created.`)
-  const oauth2 = require('simple-oauth2').create(credentials)
 
+  const oauth2 = require('simple-oauth2').create(credentials)
   router.get(`/${grant.name}/accesstoken`, async (req, res) => {
-    debuger.scope(grant.auth)
-    await TounoConnectionReady()
-    let item = await OAuth.findOne({ name: grant.auth })
+    const logger = debuger.scope(grant.auth)
+
+    await db.open()
+    let item = await db.OAuth.findOne({ name: grant.auth })
     if (!item || !item.token) {
-      debuger.error(`authorization error -- Please validate auth`)
+      logger.error(`authorization error -- Please validate auth`)
       res.statusCode(500)
       return
     }
@@ -43,7 +42,7 @@ module.exports = grant => {
       res.end()
       return
     }
-    debuger.log(`authorization step-4 -- refreshing Token`)
+    logger.log(`authorization step-4 -- refreshing Token`)
 
     try {
       accessToken = await accessToken.refresh({
@@ -51,20 +50,20 @@ module.exports = grant => {
         client_id: client.id,
         client_secret: client.secret
       })
-      await OAuth.update({ _id: item._id }, { $set: { token: accessToken.token, updated: moment().toDate() } })
-      debuger.log(`authorization step-5 -- refreshToken (${elapsed.nanoseconds()})`)
-      debuger.audit(`Authorization ${grant.auth} refresh token completed.`, 'success')
+      await db.OAuth.update({ _id: item._id }, { $set: { token: accessToken.token, updated: moment().toDate() } })
+      logger.log(`authorization step-5 -- refreshToken (${elapsed.nanoseconds()})`)
+      logger.audit(`Authorization ${grant.auth} refresh token completed.`, 'success')
       res.end()
     } catch (ex) {
-      debuger.error(`authorization error -- refreshing token`)
-      debuger.error(ex)
+      logger.error(`authorization error -- refreshing token`)
+      logger.error(ex)
       res.statusCode(500)
     }
   })
 
   router.get(`/${grant.name}`, async (req, res) => {
     let { query, baseUrl } = req
-    debuger.scope(grant.auth)
+    const logger = debuger.scope(grant.auth)
 
     const uri = `${host}${baseUrl}/${grant.name}`
     const state = `${client.state ? `${client.state}_` : 'api-'}${randString(8)}`
@@ -75,12 +74,12 @@ module.exports = grant => {
     })
 
     if (!query.code) {
-      debuger.log(`authorization step-0 -- redirect '${uri}'`)
+      logger.log(`authorization step-0 -- redirect '${uri}'`)
       res.redirect(authorizationUri)
     } else {
       let elapsed = new Time()
-      debuger.log(`authorization step-1 -- authorized ${query.code}`)
-      debuger.log(query)
+      logger.log(`authorization step-1 -- authorized ${query.code}`)
+      logger.log(query)
 
       try {
         const result = await oauth2.authorizationCode.getToken({
@@ -91,8 +90,8 @@ module.exports = grant => {
           redirect_uri: uri
         })
 
-        await TounoConnectionReady()
-        let item = await OAuth.findOne({ name: grant.auth })
+        await db.open()
+        let item = await db.OAuth.findOne({ name: grant.auth })
 
         let commited = {
           name: grant.auth,
@@ -103,15 +102,15 @@ module.exports = grant => {
         }
 
         if (!item) {
-          await new OAuth(commited).save()
+          await new db.OAuth(commited).save()
         } else {
-          await OAuth.update({ _id: item._id }, { $set: commited })
+          await db.OAuth.update({ _id: item._id }, { $set: commited })
         }
-        debuger.audit(`Authorization ${grant.auth} access token completed.`, 'success')
-        debuger.log(`authorization step-3 -- accessToken ${!item ? 'created' : 'updated'} (${elapsed.nanoseconds()})`)
+        logger.audit(`Authorization ${grant.auth} access token completed.`, 'success')
+        logger.log(`authorization step-3 -- accessToken ${!item ? 'created' : 'updated'} (${elapsed.nanoseconds()})`)
       } catch (ex) {
-        debuger.log(`authorization step-error -- getToken fail`)
-        debuger.error(ex)
+        logger.log(`authorization step-error -- getToken fail`)
+        logger.error(ex)
       }
 
       res.redirect(`${host}/`)

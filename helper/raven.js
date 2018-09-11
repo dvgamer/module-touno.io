@@ -1,5 +1,5 @@
 const Raven = require('raven')
-const { isDev } = require('./variables')
+const { isDev } = require('./variable')
 const logger = require('./debuger/logger')('Raven')
 
 let config = null
