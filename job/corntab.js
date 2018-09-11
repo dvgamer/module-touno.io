@@ -1,6 +1,7 @@
 const cron = require('cron')
 const moment = require('moment')
 
+const debuger = require('../helper/debuger')
 const logger = require('../helper/debuger/logger')('CronJob')
 const Raven = require('../helper/raven')
 const conn = require('../db-touno')
@@ -15,6 +16,7 @@ let RefreshCornTab = async (db, frequency) => {
       OnJob.stop()
       OnJob.setTime(new cron.CronTime(schedule.data.time))
       logger.info(`Job ID: '${ID}' Restarted is next at ${moment(OnJob.nextDates()).format('DD MMMM YYYY HH:mm:ss')}`)
+      debuger.audit(`${ID} restarted is next at ${moment(OnJob.nextDates()).format('DD MMMM YYYY HH:mm:ss')}`, 'success')
       await db.Touno.updateOne({ _id: schedule._id }, { $set: { 'data.started': true } })
       OnJob.start()
     }
@@ -44,6 +46,7 @@ module.exports = opt => Raven.Tracking(async () => {
         opt.tick().then(() => {
           corn.IsStoped = true
           logger.success(`Job ID: '${corn.ID}' successful and next at ${moment(OnJob.nextDates()).format('DD MMMM YYYY HH:mm:ss')}.`)
+          debuger.audit(`${corn.ID} successful and next at ${moment(OnJob.nextDates()).format('DD MMMM YYYY HH:mm:ss')}`, 'success')
         }).catch(ex => {
           corn.IsStoped = true
           logger.error(`Job ID: '${corn.ID}' error.`)
@@ -61,6 +64,7 @@ module.exports = opt => Raven.Tracking(async () => {
     timeZone: 'Asia/Bangkok'
   })
   logger.info(`Job ID: '${corn.ID}' is next at ${moment(corn.OnJob.nextDates()).format('DD MMMM YYYY HH:mm:ss')}`)
+  debuger.audit(`${corn.ID} is next at ${moment(corn.OnJob.nextDates()).format('DD MMMM YYYY HH:mm:ss')}`, 'success')
 
   if (corn.data.initial) corn.OnJob.fireOnTick()
   await db.Touno.updateOne({ _id: schedule._id }, { $set: { 'data.started': true, 'data.reload': false } })
