@@ -7,7 +7,7 @@ moment.tz.setDefault(process.env.TZ || 'Asia/Bangkok')
 const debuger = require('../helper/debuger').scope('MongoDB')
 let mongodb = {
   MongoConnection: async (dbname, account, server) => {
-    const MONGODB_ACCOUNT = account || process.env.MONGODB_ACCOUNT
+    const MONGODB_ACCOUNT = account || process.env.MONGODB_ADMIN
     const MONGODB_SERVER = server || process.env.MONGODB_SERVER || 'localhost:27017'
     let MONGODB_URI = `mongodb://${MONGODB_ACCOUNT ? `${MONGODB_ACCOUNT}@` : ''}${MONGODB_SERVER}/${dbname}?authMode=scram-sha1`
     let conn = await mongoose.createConnection(MONGODB_URI, { useNewUrlParser: true, connectTimeoutMS: 10000 })
