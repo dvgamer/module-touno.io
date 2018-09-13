@@ -8,7 +8,7 @@ module.exports = {
   open: async () => {
     if (!conn.connected()) {
       conn = await MongoConnection('db_crypto', process.env.DBCRYPTO_USER, process.env.DBCRYPTO_SERVER)
-      MongoSchemaMapping(conn, require('./nicehash'))
+      MongoSchemaMapping(conn, require('./crypto-market'))
     }
     return conn
   }
