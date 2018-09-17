@@ -26,6 +26,7 @@ let RefreshCornTab = async (db, frequency) => {
 
 module.exports = opt => Raven.Tracking(async () => {
   let db = await conn.open()
+  Raven.ProcessClosed(process, db.close)
   let schedule = await db.Touno.findOne({ group: 'corntab', item: opt.id })
 
   if (!opt.id || !schedule) throw new Error('CornTab ID not found.')
