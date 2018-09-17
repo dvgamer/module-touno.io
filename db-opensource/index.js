@@ -9,6 +9,7 @@ module.exports = {
     if (!conn.connected()) {
       conn = await MongoConnection('db_opensource', process.env.DBOPENSOURCE_USER, process.env.DBOPENSOURCE_SERVER)
       MongoSchemaMapping(conn, require('./exhentai'))
+      MongoSchemaMapping(conn, require('./pokedex'))
     }
     return conn
   }
