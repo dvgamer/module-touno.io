@@ -1,8 +1,8 @@
 const mongoose = require('mongoose')
 module.exports = [
   {
-    id: 'PokedexGo',
-    name: 'db-pokedex-go',
+    id: 'PokemonGo',
+    name: 'db-pokemon-go',
     schema: mongoose.Schema({
       filename: String,
       image: String,
@@ -39,13 +39,45 @@ module.exports = [
     })
   },
   {
+    id: 'PokemonGoEvents',
+    name: 'db-pokemon-go-event',
+    schema: mongoose.Schema({
+      event: String,
+      title: String,
+      description: String,
+      url: String,
+      type: String,
+      image: String,
+      share_body: String,
+      logo: String,
+      start_date: String,
+      end_date: String,
+      countries: String,
+      upvotes_id: String,
+      created: Date
+    })
+  },
+  {
+    id: 'PokemonGoNews',
+    name: 'db-pokemon-go-news',
+    schema: mongoose.Schema({
+      title: String,
+      description: String,
+      url: String,
+      image: String,
+      start_date: Date,
+      created: Date
+    })
+  },
+  {
     id: 'BotRomutoMessage',
     name: 'bot-rotomu-message',
     schema: mongoose.Schema({
+      from: String,
       to: Array,
-      message: String,
-      created: Date,
-      schedule: Date
+      sender: mongoose.Schema.Types.Mixed,
+      schedule: Date,
+      created: Date
     })
   },
   {
@@ -53,14 +85,13 @@ module.exports = [
     name: 'bot-rotomu-config',
     schema: mongoose.Schema({
       id: Array,
+      type: String,
       permission: {
         news: Boolean,
         pokedex: Boolean,
         event: Boolean
       },
-      active: Boolean,
-      created: Date,
-      schedule: Date
+      created: Date
     })
   }
 ]
