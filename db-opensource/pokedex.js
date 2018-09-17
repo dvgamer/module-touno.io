@@ -70,7 +70,7 @@ module.exports = [
     })
   },
   {
-    id: 'BotRomutoMessage',
+    id: 'BotRotomuMessage',
     name: 'bot-rotomu-message',
     schema: mongoose.Schema({
       from: String,
@@ -82,7 +82,7 @@ module.exports = [
     })
   },
   {
-    id: 'BotRomutoConfig',
+    id: 'BotRotomuConfig',
     name: 'bot-rotomu-config',
     schema: mongoose.Schema({
       id: Array,
