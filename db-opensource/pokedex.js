@@ -77,7 +77,8 @@ module.exports = [
       to: Array,
       sender: mongoose.Schema.Types.Mixed,
       schedule: Date,
-      created: Date
+      created: Date,
+      sended: Boolean
     })
   },
   {
