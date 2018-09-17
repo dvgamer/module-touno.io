@@ -1,19 +1,21 @@
 const request = require('request-promise')
-const db = require('./../db-touno')
 
 const API_ENDPOINT = process.env.API_ENDPOINT || `https://touno.io`
 
 module.exports = {
   AccessToken: async sender => {
-    if (!db.connected()) throw new Error('MongoDB ConnectionOpen() is not used.')
-    let { OAuth } = await db.open()
-    let item = await OAuth.findOne({ name: sender.name })
-    if (!item) {
-      return { error: 'not oauth type, Please validate auth.', uri: `${API_ENDPOINT}/auth/${sender.auth}` }
+    if (!sender.auth) throw new Error(`AccessToken require 'auth' name.`)
+    if (!sender.uri) throw new Error(`AccessToken require 'uri' path.`)
+
+    let item = await request({ method: 'POST', uri: `${API_ENDPOINT}/auth/${sender.auth}/accesstoken`, json: true })
+    if (item.error) {
+      throw new Error('Not oauth type, or please auth data from server.')
     } else {
-      await request(`${API_ENDPOINT}/auth/${sender.auth}/accesstoken`)
-      item = await OAuth.findOne({ name: sender.name })
-      return item.token
+      return request({
+        method: sender.method || 'POST',
+        headers: Object.assign({ 'Authorization': `Bearer ${item.token.access_token}` }, sender.headers),
+        uri: sender.uri
+      })
     }
   }
 }
