@@ -37,5 +37,30 @@ module.exports = [
       sta: String,
       link: String
     })
+  },
+  {
+    id: 'BotRomutoMessage',
+    name: 'bot-rotomu-message',
+    schema: mongoose.Schema({
+      to: Array,
+      message: String,
+      created: Date,
+      schedule: Date
+    })
+  },
+  {
+    id: 'BotRomutoConfig',
+    name: 'bot-rotomu-config',
+    schema: mongoose.Schema({
+      id: Array,
+      permission: {
+        news: Boolean,
+        pokedex: Boolean,
+        event: Boolean
+      },
+      active: Boolean,
+      created: Date,
+      schedule: Date
+    })
   }
 ]
