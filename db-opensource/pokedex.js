@@ -85,7 +85,7 @@ module.exports = [
     id: 'BotRotomuConfig',
     name: 'bot-rotomu-config',
     schema: mongoose.Schema({
-      id: Array,
+      id: String,
       type: String,
       permission: {
         news: Boolean,
