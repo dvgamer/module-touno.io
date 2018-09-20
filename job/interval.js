@@ -1,7 +1,9 @@
 const Raven = require('../helper/raven')
 
+const logger = require('../helper/debuger/logger')('Interval')
 module.exports = options => Raven.Tracking(async () => {
   options = Object.assign({ now: false, second: 30, interval: 0 }, options)
+  logger.info(`Job Interval started every ${options.second}s.`)
 
   let iLoop = 0
   let rawIntervel = 0
