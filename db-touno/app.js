@@ -38,6 +38,11 @@ module.exports = [
         index: true,
         unique: true
       },
+      email: {
+        type: String,
+        index: true,
+        unique: true
+      },
       password: String,
       permission: String,
       created: Date,
