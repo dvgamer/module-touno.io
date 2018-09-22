@@ -30,14 +30,29 @@ module.exports = [
     })
   },
   {
-    id: 'LogRequest',
-    name: 'log-request',
+    id: 'AuthAccount',
+    name: 'db-auth-account',
     schema: mongoose.Schema({
-      url: String,
-      token: Boolean,
-      ipaddress: String,
-      requested: Date,
-      created: Date
+      username: {
+        type: String,
+        index: true,
+        unique: true
+      },
+      password: String,
+      permission: String,
+      created: Date,
+      enabled: Boolean
+    })
+  },
+  {
+    id: 'AuthSession',
+    name: 'db-auth-session',
+    schema: mongoose.Schema({
+      username: String,
+      token: String,
+      hash: String,
+      created: Date,
+      online: Boolean
     })
   },
   {
@@ -48,6 +63,17 @@ module.exports = [
       message: mongoose.Schema.Types.Mixed,
       notify: Boolean,
       schedule: Date,
+      created: Date
+    })
+  },
+  {
+    id: 'LogRequest',
+    name: 'log-request',
+    schema: mongoose.Schema({
+      url: String,
+      token: Boolean,
+      ipaddress: String,
+      requested: Date,
       created: Date
     })
   },
