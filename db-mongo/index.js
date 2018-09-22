@@ -13,7 +13,7 @@ let mongodb = {
 
     if (MONGODB_ACCOUNT === undefined || !MONGODB_SERVER) throw new Error('No Environment db-mongo Setup')
     let MONGODB_URI = `mongodb://${MONGODB_ACCOUNT ? `${MONGODB_ACCOUNT}@` : ''}${MONGODB_SERVER}/${dbname}?authMode=scram-sha1${IsAdmin ? '&authSource=admin' : ''}`
-    let conn = await mongoose.createConnection(MONGODB_URI, { useNewUrlParser: true, connectTimeoutMS: 10000 })
+    let conn = await mongoose.createConnection(MONGODB_URI, { useCreateIndex: true, useNewUrlParser: true, connectTimeoutMS: 10000 })
     debuger.log(`Connected. mongodb://${MONGODB_SERVER}/${dbname} (State is ${conn.readyState})`)
     conn.connected = () => conn.readyState === 1
     conn.close = async () => {
