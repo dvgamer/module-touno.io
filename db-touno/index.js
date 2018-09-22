@@ -12,6 +12,7 @@ module.exports = {
       MongoSchemaMapping(conn, require('./schedule'))
       MongoSchemaMapping(conn, require('./wakatime'))
       MongoSchemaMapping(conn, require('./github'))
+      MongoSchemaMapping(conn, require('./expanse'))
     }
     return conn
   }
