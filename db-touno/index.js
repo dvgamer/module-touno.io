@@ -13,6 +13,7 @@ module.exports = {
       MongoSchemaMapping(conn, require('./wakatime'))
       MongoSchemaMapping(conn, require('./github'))
       MongoSchemaMapping(conn, require('./expanse'))
+      MongoSchemaMapping(conn, require('./donate'))
     }
     return conn
   }
