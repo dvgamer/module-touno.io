@@ -15,6 +15,7 @@ module.exports = [
     schema: mongoose.Schema({
       title: String,
       project: String,
+      image: String,
       reftext: String,
       detail: String,
       color: String,
