@@ -10,6 +10,18 @@ module.exports = [
     })
   },
   {
+    id: 'TounoTimeline',
+    name: 'app-touno-timeline',
+    schema: mongoose.Schema({
+      title: String,
+      project: String,
+      reftext: String,
+      detail: String,
+      color: String,
+      created: Date
+    })
+  },
+  {
     id: 'OAuth',
     name: 'oauth-3rd',
     schema: mongoose.Schema({
