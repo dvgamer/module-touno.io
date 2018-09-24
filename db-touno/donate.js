@@ -11,6 +11,7 @@ module.exports = [
       },
       date: Date,
       amount: Number,
+      fee: Number,
       currency: String,
       rate: Number,
       created: {
