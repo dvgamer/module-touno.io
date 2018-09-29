@@ -21,12 +21,10 @@ let mongodb = {
       await conn.close()
       debuger.log(`Closed. mongodb://${MONGODB_SERVER}/${dbname} (State is ${conn.readyState})`)
     }
-    return conn
-  },
-  DefaultData: source => {
-    return Object.assign({
+    conn.Schema = {
       ObjectId
-    }, source)
+    }
+    return conn
   },
   MongoSchemaMapping: (conn, db) => {
     for (let i = 0; i < db.length; i++) {
