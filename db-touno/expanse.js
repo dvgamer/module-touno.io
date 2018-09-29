@@ -15,7 +15,8 @@ module.exports = [
       end: Date,
       pay: Mixed,
       receive: Number,
-      currency: String
+      currency: String,
+      created: Date
     })
   },
   {
@@ -29,7 +30,8 @@ module.exports = [
       start: Date,
       end: Date,
       pay: Number,
-      currency: String
+      currency: String,
+      created: Date
     })
   },
   {
@@ -45,6 +47,7 @@ module.exports = [
       group: String,
       amount: Number,
       currency: String,
+      created: Date,
       visible: Boolean
     })
   },
