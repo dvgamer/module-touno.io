@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const moment = require('moment-timezone')
+const { ObjectId } = require('mongoose').Schema.Types
 
 mongoose.Promise = require('q').Promise
 moment.tz.setDefault(process.env.TZ || 'Asia/Bangkok')
@@ -21,6 +22,11 @@ let mongodb = {
       debuger.log(`Closed. mongodb://${MONGODB_SERVER}/${dbname} (State is ${conn.readyState})`)
     }
     return conn
+  },
+  DefaultData: source => {
+    return Object.assign({
+      ObjectId
+    }, source)
   },
   MongoSchemaMapping: (conn, db) => {
     for (let i = 0; i < db.length; i++) {

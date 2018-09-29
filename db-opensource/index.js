@@ -1,4 +1,4 @@
-const { MongoConnection, MongoSchemaMapping } = require('../db-mongo')
+const { MongoConnection, MongoSchemaMapping, DefaultData } = require('../db-mongo')
 
 let conn = {
   connected: () => false
@@ -11,6 +11,6 @@ module.exports = {
       MongoSchemaMapping(conn, require('./exhentai'))
       MongoSchemaMapping(conn, require('./pokedex'))
     }
-    return conn
+    return DefaultData(conn)
   }
 }
