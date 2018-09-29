@@ -89,7 +89,7 @@ module.exports = [
     name: 'db-expense-category',
     schema: mongoose.Schema({
       group: {
-        typetype: String,
+        type: String,
         index: true
       },
       name: {
