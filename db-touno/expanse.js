@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { Mixed, ObjectId } = mongoose.Schema.Types
+const { Mixed } = mongoose.Schema.Types
 
 module.exports = [
   {
@@ -23,7 +23,7 @@ module.exports = [
     id: 'ExpenseInstallment',
     name: 'db-expense-installment',
     schema: mongoose.Schema({
-      account_id: ObjectId,
+      account_id: String,
       type: String, // [ 'daily', 'monthly', 'yearly', 'fist-month', 'last-month', 'every-{day}' ]
       ignore: Object,
       limit: Number,
@@ -70,11 +70,11 @@ module.exports = [
     name: 'db-expense-transaction',
     schema: mongoose.Schema({
       account_id: {
-        type: ObjectId,
+        type: String,
         index: true
       }, // to_account_id
       transfer_id: {
-        type: ObjectId,
+        type: String,
         index: true
       },
       transfer: Object,
