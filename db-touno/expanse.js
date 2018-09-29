@@ -74,9 +74,10 @@ module.exports = [
         index: true
       }, // to_account_id
       transfer_id: {
-        type: String,
+        type: ObjectId,
         index: true
-      }, // `${from_id}|${timestamp}|${to_id}` || null
+      },
+      transfer: Object,
       amount: Number, // - expense, + income
       category: String,
       date: Date,
