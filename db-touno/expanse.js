@@ -19,6 +19,20 @@ module.exports = [
     })
   },
   {
+    id: 'ExpenseInstallment',
+    name: 'db-expense-installment',
+    schema: mongoose.Schema({
+      account_id: String,
+      type: String, // [ 'daily', 'monthly', 'yearly', 'fist-month', 'last-month', 'every-{day}' ]
+      ignore: Object,
+      limit: Number,
+      start: Date,
+      end: Date,
+      pay: Number,
+      currency: String
+    })
+  },
+  {
     id: 'ExpenseAccount',
     name: 'db-expense-account',
     schema: mongoose.Schema({
@@ -74,7 +88,7 @@ module.exports = [
         type: String,
         index: true
       },
-      category: {
+      name: {
         type: String,
         index: true,
         unique: true

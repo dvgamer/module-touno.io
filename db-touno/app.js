@@ -14,9 +14,9 @@ module.exports = [
     name: 'app-touno-timeline',
     schema: mongoose.Schema({
       title: String,
-      project: String,
+      subtitle: String,
       image: String,
-      reftext: String,
+      quote: String,
       detail: String,
       color: String,
       created: Date
