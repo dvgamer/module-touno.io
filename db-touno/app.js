@@ -19,6 +19,7 @@ module.exports = [
       quote: String,
       detail: String,
       color: String,
+      datetime: Date,
       created: Date
     })
   },
