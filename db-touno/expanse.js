@@ -7,29 +7,14 @@ module.exports = [
     name: 'db-expense',
     schema: mongoose.Schema({
       enabled: Boolean,
-      account: String,
+      account_id: String,
       group: String,
       name: String,
       type: String,
       duedate: Date,
-      end: Date,
+      billing: Number,
       pay: Mixed,
       receive: Number,
-      currency: String,
-      created: Date
-    })
-  },
-  {
-    id: 'ExpenseInstallment',
-    name: 'db-expense-installment',
-    schema: mongoose.Schema({
-      account_id: String,
-      type: String, // [ 'daily', 'monthly', 'yearly', 'fist-month', 'last-month', 'every-{day}' ]
-      ignore: Object,
-      limit: Number,
-      start: Date,
-      end: Date,
-      pay: Number,
       currency: String,
       created: Date
     })
