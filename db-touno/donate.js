@@ -9,6 +9,10 @@ module.exports = [
         type: String,
         index: true
       },
+      method: {
+        type: String,
+        index: true
+      },
       date: Date,
       amount: Number,
       fee: Number,
