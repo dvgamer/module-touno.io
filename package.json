@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/touno-project/module.core-systems.git"
+    "url": "git+https://github.com/touno-io/node_debuger.git"
   },
   "keywords": [
     "touno.io",
@@ -20,19 +20,19 @@
   "author": "Mr.Kananek Thongkam",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/touno-project/module.core-systems/issues"
+    "url": "https://github.com/touno-io/node_debuger/issues"
   },
-  "homepage": "https://github.com/touno-project/module.core-systems#readme",
+  "homepage": "https://github.com/touno-io/node_debuger#readme",
   "optionalDependencies": {
     "fsevents": "*"
   },
   "dependencies": {
     "chalk": "^2.4.1",
-    "cron": "^1.4.1",
-    "lodash": "^4.17.10",
+    "cron": "^1.5.0",
+    "lodash": "^4.17.11",
     "moment": "^2.22.2",
-    "moment-timezone": "^0.5.21",
-    "mongoose": "^5.2.14",
+    "moment-timezone": "^0.5.23",
+    "mongoose": "^5.3.14",
     "numeral": "^2.0.6",
     "q": "^1.5.1",
     "raven": "^2.6.4",
@@ -45,14 +45,14 @@
     "env-cmd": "^8.0.2",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0-beta.0",
-    "eslint-plugin-html": "^4.0.5",
+    "eslint-plugin-html": "^4.0.6",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-standard": "^3.1.0",
     "mocha": "^5.2.0",
     "mocha-logger": "^1.0.6",
-    "youch": "^2.0.9",
+    "youch": "^2.0.10",
     "youch-terminal": "^1.0.0"
   }
 }

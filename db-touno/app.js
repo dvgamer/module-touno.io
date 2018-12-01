@@ -13,14 +13,20 @@ module.exports = [
     id: 'TounoTimeline',
     name: 'app-touno-timeline',
     schema: mongoose.Schema({
-      title: String,
+      title: {
+        type: String,
+        index: true
+      },
       subtitle: String,
       image: String,
       quote: String,
       detail: String,
       color: String,
       datetime: Date,
-      created: Date
+      created: {
+        type: Date,
+        index: true
+      }
     })
   },
   {
@@ -29,9 +35,16 @@ module.exports = [
     schema: mongoose.Schema({
       name: String,
       client: String,
-      updated: Date,
       state: String,
-      token: Object
+      token: Object,
+      updated: {
+        type: Date,
+        index: true
+      },
+      created: {
+        type: Date,
+        index: true
+      }
     })
   },
   {
@@ -59,8 +72,14 @@ module.exports = [
       },
       password: String,
       permission: String,
-      created: Date,
-      enabled: Boolean
+      created: {
+        type: Date,
+        index: true
+      },
+      enabled: {
+        type: Boolean,
+        index: true
+      }
     })
   },
   {
@@ -70,19 +89,34 @@ module.exports = [
       username: String,
       token: String,
       hash: String,
-      created: Date,
-      online: Boolean
+      online: Boolean,
+      created: {
+        type: Date,
+        index: true
+      }
     })
   },
   {
-    id: 'Notification',
-    name: 'db-notification',
+    id: 'Notify',
+    name: 'log-notify',
     schema: mongoose.Schema({
-      endpoint: String,
+      endpoint: {
+        type: String,
+        index: true
+      },
       message: mongoose.Schema.Types.Mixed,
-      notify: Boolean,
-      schedule: Date,
-      created: Date
+      notify: {
+        type: Boolean,
+        index: true
+      },
+      schedule: {
+        type: Date,
+        index: true
+      },
+      created: {
+        type: Date,
+        index: true
+      }
     })
   },
   {
@@ -93,19 +127,30 @@ module.exports = [
       token: Boolean,
       ipaddress: String,
       requested: Date,
-      created: Date
+      created: {
+        type: Date,
+        index: true
+      }
     })
   },
   {
     id: 'Audit',
     name: 'log-audit',
     schema: mongoose.Schema({
-      created: Date,
+      type: {
+        type: String,
+        index: true
+      },
+      scope: {
+        type: String,
+        index: true
+      },
       message: String,
-      timeline: String,
-      active: String,
-      badge: String,
-      tag: Array
+      tag: Array,
+      created: {
+        type: Date,
+        index: true
+      }
     })
   }
 ]
